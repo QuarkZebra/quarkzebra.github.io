@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Not found — mathbrown.com</title>
 <script>
-/* Forgive any capitalization: /MHF4U, /Mhf4u, /mhf4u/... all forward. */
+/* Forgive any capitalization: /MHF4U, /Mhf4u, /mhf4u/... all forward to the
+   lowercase course site, keeping the rest of the path, query and hash. */
 (function(){
-  var map={mhf4u:"https://quarkzebra.github.io/MHF4U/",
-           mcr3u:"https://quarkzebra.github.io/MCR3U/",
-           mth1w:"https://quarkzebra.github.io/MTH1W/"};
-  var seg=location.pathname.split("/").filter(Boolean)[0];
-  if(seg&&map[seg.toLowerCase()])location.replace(map[seg.toLowerCase()]);
+  var courses={mhf4u:1,mcr3u:1,mth1w:1};
+  var parts=location.pathname.split("/").filter(Boolean);
+  var seg=parts[0]||"", low=seg.toLowerCase();
+  if(courses[low]&&seg!==low){
+    parts[0]=low;
+    location.replace("/"+parts.join("/")+(parts.length>1?"":"/")+location.search+location.hash);
+  }
 })();
 </script>
 <style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:90vh}

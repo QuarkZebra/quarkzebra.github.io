@@ -11,7 +11,7 @@ GitHub itself 301-redirects the old `quarkzebra.github.io/<repo>/` URLs to
 the same path on mathbrown.com.
 
 - `index.html` — the whole homepage (styles + card physics inline).
-  Cards dodge the cursor for 5 s, settle by 6 s. SPE4O never settles.
+  Cards dodge the cursor for 5 s, settle by 6 s. GLX4O never settles.
   Course cards link to `/mhf4u/`, `/mcr3u/`, `/mth1w/`.
 - `MHF4U/`, `MCR3U/`, `MTH1W/` — forwarders for the old upper-case
   addresses (`quarkzebra.github.io/MCR3U/` → `mathbrown.com/MCR3U/` →

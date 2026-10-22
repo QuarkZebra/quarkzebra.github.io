@@ -30,11 +30,12 @@ document.documentElement.setAttribute("data-theme",d?"dark":"light");})();
   --sh:0 2px 10px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
 }
 .card[data-c=mhf]{--ac:#38127d}.card[data-c=mcr]{--ac:#7c3aed}
-.card[data-c=t1w]{--ac:#0284c7}.card[data-c=spe]{--ac:#2f7d4f}
+.card[data-c=t1w]{--ac:#0284c7}.card[data-c=spe]{--ac:#2f7d4f}.card[data-c=mdm]{--ac:#e8103d}
 [data-theme="dark"] .card[data-c=mhf]{--ac:#7d51e6}
 [data-theme="dark"] .card[data-c=mcr]{--ac:#a78bfa}
 [data-theme="dark"] .card[data-c=t1w]{--ac:#38bdf8}
 [data-theme="dark"] .card[data-c=spe]{--ac:#66c68f}
+[data-theme="dark"] .card[data-c=mdm]{--ac:#ff3b5f}
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
@@ -74,6 +75,18 @@ h1 em{font-family:Georgia,serif;font-weight:700}
   box-shadow:inset 4px 0 0 var(--ac),0 0 0 3px color-mix(in srgb,var(--ac) 14%,transparent),var(--sh)}
 .card:focus-visible{outline:none}
 
+/* ── MDM4U arrives by dice: two big red dice tossed in, tumbling, that come together to form its card ── */
+.card.seed{opacity:0;visibility:hidden}
+.dw{position:absolute;left:0;top:0;width:64px;height:64px;perspective:700px;z-index:3;pointer-events:none;opacity:0;will-change:transform}
+.die{position:relative;width:64px;height:64px;transform-style:preserve-3d}
+.die .f{position:absolute;inset:0;background:#e8103d;border-radius:13px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+  padding:9px;gap:3px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.14),inset 0 -8px 14px rgba(0,0,0,.2),inset 0 6px 10px rgba(255,255,255,.14);backface-visibility:hidden}
+.die .f i{display:block;border-radius:50%;background:#fff;opacity:0;box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.die .f i.on{opacity:1}
+.die .f1{transform:translateZ(32px)}.die .f6{transform:rotateY(180deg) translateZ(32px)}
+.die .f2{transform:rotateY(90deg) translateZ(32px)}.die .f5{transform:rotateY(-90deg) translateZ(32px)}
+.die .f3{transform:rotateX(90deg) translateZ(32px)}.die .f4{transform:rotateX(-90deg) translateZ(32px)}
+
 /* ── static fallback (reduced motion / no JS) ────────────── */
 body.static{overflow:auto}
 body.static .masthead{position:static;margin-top:9vh;pointer-events:auto}
@@ -81,6 +94,7 @@ body.static #field{display:flex;flex-wrap:wrap;justify-content:center;gap:1.1rem
   padding:2rem 1.2rem 4rem;max-width:60rem;margin:0 auto}
 body.static .card{position:static;pointer-events:auto;transform:none!important}
 body.static .card.spe{pointer-events:none}
+body.static .card.seed{opacity:1;visibility:visible}
 @media (max-width:560px){.card{width:min(230px,74vw)}}
 </style>
 </head>
@@ -105,6 +119,10 @@ body.static .card.spe{pointer-events:none}
     <span class="in"><span class="code">MTH1W</span>
     <span class="name">Mathematics 9</span>
     <span class="sub">Grade 9 &middot; De-streamed</span></span></a>
+  <a class="card seed" data-c="mdm" href="/MDM4U/">
+    <span class="in"><span class="code">MDM4U</span>
+    <span class="name">Data Management</span>
+    <span class="sub">Grade 12 &middot; University Preparation</span></span></a>
   <div class="card spe" data-c="spe" aria-hidden="true">
     <span class="in"><span class="code">GLX4O</span>
     <span class="name">How to Get 100% on Any Test</span>
@@ -129,7 +147,7 @@ body.static .card.spe{pointer-events:none}
 
   var DODGE_END=5000, SETTLE=6000;         // dodge for 5 s, fully calm by 6 s
   var R=180, FLEE=5200, VFLEE=850;         // flee radius / accel / speed cap
-  var cards=[].slice.call(document.querySelectorAll('.card'));
+  var cards=[].slice.call(document.querySelectorAll('.card')).filter(function(el){return !el.classList.contains('seed')});
   var W=innerWidth,H=innerHeight,PAD=10;
   var mouse={x:-1e4,y:-1e4,on:false}, touchTimer=null;
 
@@ -218,6 +236,81 @@ body.static .card.spe{pointer-events:none}
     return px>b.x-8&&px<b.x+b.w+8&&py>b.y-8&&py<b.y+b.h+8;
   }
 
+  // ── MDM4U arrives by dice: at 2 s two big red dice are tossed in from the bottom corners, tumble through the
+  //    air, bounce, roll to a stop on a face, slide together and become the card, which then joins the others ──
+  var seedEl=document.querySelector('.card.seed'), dice=[], diceState=0, M=null, formT=0;
+  function mkDie(){
+    var w=document.createElement('div');w.className='dw';var d=document.createElement('div');d.className='die';
+    var P={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+    for(var f=1;f<=6;f++){var face=document.createElement('div');face.className='f f'+f;
+      for(var i=0;i<9;i++){var pip=document.createElement('i');if(P[f].indexOf(i)>=0)pip.className='on';face.appendChild(pip)}
+      d.appendChild(face)}
+    w.appendChild(d);document.body.appendChild(w);
+    return{w:w,d:d,x:0,y:0,vx:0,vy:0,rx:0,ry:0,rz:0,wx:0,wy:0,wz:0,bounces:0,done:false};
+  }
+  function tossDice(){
+    var topB=Math.min(H*.30,250);M={x:W/2,y:topB+(H-topB)*.52};
+    var g=1500,tf=1.15;
+    [[-90,H+60,-72],[W+90,H+60,72]].forEach(function(s){
+      var d=mkDie();d.x=s[0];d.y=s[1];var tx=M.x+s[2],ty=M.y;
+      d.vx=(tx-d.x)/tf;d.vy=(ty-d.y-.5*g*tf*tf)/tf;d.g=g;d.floor=ty;
+      d.wx=(Math.random()*2+3)*(Math.random()<.5?-1:1);d.wy=(Math.random()*2+3)*(Math.random()<.5?-1:1);d.wz=Math.random()*2-1;
+      d.w.style.opacity=1;dice.push(d);
+    });
+    diceState=1;
+  }
+  function paintDie(d,extra){
+    d.w.style.transform='translate3d('+(d.x-32)+'px,'+(d.y-32)+'px,0)'+(extra||'');
+    d.d.style.transform='rotateX('+d.rx+'deg) rotateY('+d.ry+'deg) rotateZ('+d.rz+'deg)';
+  }
+  function stepDice(dt,now){
+    if(diceState===0||diceState===3)return;
+    if(diceState===1){
+      var allDone=true;
+      dice.forEach(function(d){
+        if(!d.done){
+          d.vy+=d.g*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;
+          d.rx+=d.wx*115*dt;d.ry+=d.wy*115*dt;d.rz+=d.wz*57*dt;
+          if(d.y>=d.floor&&d.vy>0){
+            d.y=d.floor;d.bounces++;d.vy=-d.vy*.42;d.vx*=.6;d.wx*=.55;d.wy*=.55;
+            if(d.bounces>=3||Math.abs(d.vy)<70){
+              d.done=true;d.vy=0;d.vx=0;d.settleT=now;
+              d.rx0=d.rx;d.ry0=d.ry;d.rz0=d.rz;d.rx1=Math.round(d.rx/90)*90;d.ry1=Math.round(d.ry/90)*90;d.rz1=Math.round(d.rz/90)*90;
+            }
+          }
+          allDone=false;
+        }else{
+          var k=Math.min((now-d.settleT)/380,1),e=1-Math.pow(1-k,3);
+          d.rx=d.rx0+(d.rx1-d.rx0)*e;d.ry=d.ry0+(d.ry1-d.ry0)*e;d.rz=d.rz0+(d.rz1-d.rz0)*e;
+          if(k<1)allDone=false;
+        }
+        paintDie(d);
+      });
+      if(allDone){diceState=2;formT=now;dice.forEach(function(d){d.sx=d.x;d.sy=d.y})}
+      return;
+    }
+    // state 2: the dice slide together and become the card
+    var k=Math.min((now-formT)/700,1),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    var q=Math.max(0,(k-.7)/.3);
+    dice.forEach(function(d,i){
+      var tx=M.x+(i?22:-22),ty=M.y;
+      d.x=d.sx+(tx-d.sx)*Math.min(1,e*1.15);d.y=d.sy+(ty-d.sy)*Math.min(1,e*1.15);
+      d.w.style.opacity=1-q;paintDie(d,q?' scale('+(1-q*.45)+')':'');
+    });
+    if(q>0){
+      var cw=seedEl.offsetWidth||248,ch=seedEl.offsetHeight||120;
+      seedEl.style.visibility='visible';seedEl.style.opacity=q;
+      seedEl.style.transform='translate3d('+(M.x-cw/2)+'px,'+(M.y-ch/2)+'px,0) scale('+(.55+.45*q)+')';
+    }
+    if(k>=1){
+      diceState=3;dice.forEach(function(d){d.w.remove()});
+      var cw2=seedEl.offsetWidth||248,ch2=seedEl.offsetHeight||120;
+      var b={el:seedEl,spe:false,w:cw2,h:ch2,x:M.x-cw2/2,y:M.y-ch2/2,vx:(Math.random()-.5)*140,vy:(Math.random()-.5)*140};
+      boxes.push(b);seedEl.classList.remove('seed');seedEl.style.opacity='';seedEl.style.visibility='';
+      if(live)seedEl.classList.add('live');
+    }
+  }
+
   var t0=null,last=null,live=false,placed=false;
   function frame(now){
     W=innerWidth; H=innerHeight;
@@ -228,6 +321,8 @@ body.static .card.spe{pointer-events:none}
     if(t0===null){t0=now;last=now}
     var dt=Math.min((now-last)/1000,.032); last=now;
     var el=now-t0;
+    if(diceState===0&&el>=2000)tossDice();
+    stepDice(dt,now);
 
     if(!live&&el>=DODGE_END){live=true;
       boxes.forEach(function(b){if(!b.spe)b.el.classList.add('live')})}
@@ -318,7 +413,7 @@ body.static .card.spe{pointer-events:none}
   }
   requestAnimationFrame(frame);
 
-  window.__mb={boxes:boxes,elapsed:function(){return t0===null?0:performance.now()-t0},isLive:function(){return live}};
+  window.__mb={boxes:boxes,elapsed:function(){return t0===null?0:performance.now()-t0},isLive:function(){return live},diceState:function(){return diceState}};
 })();
 </script>
 </body>

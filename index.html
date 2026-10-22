@@ -324,14 +324,16 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
   var jumpEl=document.querySelector('.card.seed2'), jc=document.createElement('canvas'), jx=jc.getContext('2d'), jumpState=0, jumpT0=0, jumpLand=0, J=null;
   jc.id='jump'; document.body.appendChild(jc);
   function startJump(now){
+    if(!placed||!(W>320&&H>240))return;                                               // not before the field has a real viewport
     var dpr=Math.min(devicePixelRatio||1,2); jc.width=W*dpr; jc.height=H*dpr; jx.setTransform(dpr,0,0,dpr,0,0);
-    var topB=Math.min(H*.30,250), xa=W*.05, xb=W*.44, base=Math.min(H-PAD-24,H*.9), amp=Math.min((base-topB)*.62,H*.38);
-    J={xa:xa,xb:xb,base:base,amp:amp,M:{x:W*.74,y:topB+(H-topB)*.6},col:getComputedStyle(jumpEl).getPropertyValue('--ac').trim()||'#0a6f9e',trail:[]};
+    var topB=Math.min(H*.30,250), xa=W*.03, xb=W*.5, base=Math.min(H-PAD-16,H*.94), amp=Math.min((base-topB)*.72,H*.46);
+    J={xa:xa,xb:xb,base:base,amp:amp,M:{x:W*.76,y:topB+(H-topB)*.62},col:getComputedStyle(jumpEl).getPropertyValue('--ac').trim()||'#0a6f9e',trail:[]};
     J.f=function(u){return u*u*(3-2*u)}; J.fp=function(u){return 6*u*(1-u)};         // the ramp: a rise that flattens at the crest
     J.px=function(u){return xa+(xb-xa)*u}; J.py=function(u){return base-amp*J.f(u)};
     J.crest={x:J.px(1),y:J.py(1)};
     var dx=J.M.x-J.crest.x, dy=Math.max(J.M.y-J.crest.y,60);
     J.g=1700; J.tf=Math.sqrt(2*dy/J.g); J.vx=dx/J.tf;                                   // horizontal launch, lands at M
+    J.ride=Math.min(1.6,Math.max(.8,2*(xb-xa)/J.vx));                                  // accelerate up the ramp so the lip speed IS the launch speed
     jumpState=1; jumpT0=now;
   }
   function jArrow(x1,y1,x2,y2,c,w){
@@ -342,27 +344,27 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
     jx.beginPath(); jx.moveTo(x2,y2); jx.lineTo(x2-ux*hs-uy*hs*.45,y2-uy*hs+ux*hs*.45); jx.lineTo(x2-ux*hs+uy*hs*.45,y2-uy*hs-ux*hs*.45); jx.closePath(); jx.fill();
   }
   function jDot(x,y,r,c){jx.beginPath();jx.arc(x,y,r,0,6.283);jx.fillStyle=c;jx.fill()}
-  function jLabel(t,x,y,c){jx.font="600 12px 'IBM Plex Mono',monospace";jx.fillStyle=c;jx.fillText(t,x,y)}
+  function jLabel(t,x,y,c){jx.font="600 14px 'IBM Plex Mono',monospace";jx.fillStyle=c;jx.fillText(t,x,y)}
   function jCurve(u1,c,alpha){
-    jx.globalAlpha=alpha; jx.strokeStyle=c; jx.lineWidth=2.5; jx.lineCap='round'; jx.beginPath();
+    jx.globalAlpha=alpha; jx.strokeStyle=c; jx.lineWidth=3.2; jx.lineCap='round'; jx.beginPath();
     for(var i=0;i<=60;i++){var u=u1*i/60; i?jx.lineTo(J.px(u),J.py(u)):jx.moveTo(J.px(u),J.py(u))}
     jx.stroke(); jx.globalAlpha=1;
   }
   function jTrail(c,alpha){
-    if(J.trail.length<2)return; jx.globalAlpha=alpha; jx.strokeStyle=c; jx.lineWidth=1.5; jx.setLineDash([4,5]); jx.beginPath();
+    if(J.trail.length<2)return; jx.globalAlpha=alpha; jx.strokeStyle=c; jx.lineWidth=2; jx.setLineDash([5,6]); jx.beginPath();
     J.trail.forEach(function(p,i){i?jx.lineTo(p[0],p[1]):jx.moveTo(p[0],p[1])}); jx.stroke(); jx.setLineDash([]); jx.globalAlpha=1;
   }
   function stepJump(now){
     if(!jumpState||jumpState===3)return;
-    var t=(now-jumpT0)/1000, c=J.col, DRAW=.6, RIDE=1.3; jx.clearRect(0,0,W,H);
+    var t=(now-jumpT0)/1000, c=J.col, DRAW=.6, RIDE=J.ride; jx.clearRect(0,0,W,H);
     if(jumpState===1){
       var pd=Math.min(t/DRAW,1); jCurve(1-Math.pow(1-pd,3),c,.9);
       if(t<DRAW)return;
       var tr=t-DRAW;
       if(tr<RIDE){                                                                   // the ride up the ramp
-        var k=tr/RIDE, u=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2, x=J.px(u), y=J.py(u);
-        var k2=Math.min(1,k+.01), u2=k2<.5?2*k2*k2:1-Math.pow(-2*k2+2,2)/2, vx=(J.px(u2)-x)/(.01*RIDE), vy=(J.py(u2)-y)/(.01*RIDE);
-        jArrow(x,y,x+vx*.2,y+vy*.2,c,2.4); jDot(x,y,5,c);
+        var k=tr/RIDE, u=k*k, x=J.px(u), y=J.py(u);                                    // ease-in: gathering speed up the ramp
+        var k2=k+.01, u2=k2*k2, vx=(J.px(u2)-x)/(.01*RIDE), vy=(J.py(u2)-y)/(.01*RIDE);
+        jArrow(x,y,x+vx*.2,y+vy*.2,c,3); jDot(x,y,6.5,c);
         var m=J.fp(u)*J.amp/(J.xb-J.xa);
         jLabel("f′ = "+m.toFixed(2),x+14,y-16,c);
         return;
@@ -371,7 +373,7 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
       if(tf<J.tf){                                                                   // the flight: horizontal launch, gravity
         var fx=J.crest.x+J.vx*tf, fy=J.crest.y+.5*J.g*tf*tf, fvy=J.g*tf;
         J.trail.push([fx,fy]); jTrail(c,.7);
-        jArrow(fx,fy,fx+J.vx*.18,fy+fvy*.18,c,2.4); jDot(fx,fy,5,c);
+        jArrow(fx,fy,fx+J.vx*.2,fy+fvy*.2,c,3); jDot(fx,fy,6.5,c);
         jLabel("v = ("+(J.vx/100).toFixed(1)+", "+(-fvy/100).toFixed(1).replace("-","−")+")",fx+14,fy-16,c);
         return;
       }
@@ -495,7 +497,7 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
   }
   requestAnimationFrame(frame);
 
-  window.__mb={boxes:boxes,elapsed:function(){return t0===null?0:performance.now()-t0},isLive:function(){return live},diceState:function(){return diceState},jumpState:function(){return jumpState},jumpNow:function(){if(jumpState===0)startJump(performance.now())}};
+  window.__mb={boxes:boxes,elapsed:function(){return t0===null?0:performance.now()-t0},isLive:function(){return live},diceState:function(){return diceState},jumpState:function(){return jumpState},jumpNow:function(){if(jumpState===0)startJump(performance.now())},jumpInfo:function(){return J&&{M:J.M,crest:J.crest,vx:J.vx,tf:J.tf,ride:J.ride,trail:J.trail.length,W:W,H:H,t0:jumpT0}}};
 })();
 </script>
 </body>

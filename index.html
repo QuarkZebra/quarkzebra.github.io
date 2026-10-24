@@ -60,7 +60,7 @@ h1{font-weight:800;font-size:clamp(1.9rem,5vw,3rem);letter-spacing:-.02em;margin
 h1 em{font-family:Georgia,serif;font-weight:700}
 .tag{color:var(--t2);font-size:.95rem}
 
-/* ── cards: two rows, semester 1 above semester 2; each arrives by its own show, then stays put ── */
+/* ── cards: MTH1W, MCR3U, MHF4U in a row, MDM4U and MCV4U stacked under MHF4U; each arrives by its own show, then stays put ── */
 .card{position:absolute;left:0;top:0;width:248px;z-index:2;display:block;
   text-decoration:none;color:inherit;pointer-events:none;will-change:transform;
   opacity:0;visibility:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
@@ -77,10 +77,6 @@ h1 em{font-family:Georgia,serif;font-weight:700}
 .card.home:hover .in,.card.home:focus-visible .in{transform:translateY(-3px);
   box-shadow:inset 4px 0 0 var(--ac),0 0 0 3px color-mix(in srgb,var(--ac) 14%,transparent),var(--sh)}
 .card:focus-visible{outline:none}
-.rlab{position:absolute;left:0;top:0;z-index:2;pointer-events:none;white-space:nowrap;
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);font-weight:600;
-  opacity:0;transition:opacity .7s}
-.rlab.show{opacity:1}
 
 /* ── the two drawing layers: #fx behind the cards (the functions), #jump above them (the ski jump) ── */
 #fx,#jump{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
@@ -112,7 +108,7 @@ body.static .masthead{position:static;margin-top:9vh;pointer-events:auto}
 body.static #field{display:flex;flex-wrap:wrap;justify-content:center;gap:1.1rem;
   padding:2rem 1.2rem 4rem;max-width:60rem;margin:0 auto}
 body.static .card{position:static;pointer-events:auto;transform:none!important;opacity:1;visibility:visible}
-body.static .rlab,body.static #fx,body.static #jump{display:none}
+body.static #fx,body.static #jump{display:none}
 @media (max-width:560px){.card{width:min(230px,74vw)}}
 </style>
 </head>
@@ -125,7 +121,6 @@ body.static .rlab,body.static #fx,body.static #jump{display:none}
 </header>
 
 <main id="field">
-  <div class="rlab" id="lab1">Semester 1 &middot; Sep 2026 &ndash; Jan 2027</div>
   <a class="card" data-c="t1w" href="/mth1w/">
     <span class="in"><span class="code">MTH1W</span>
     <span class="name">Mathematics 9</span>
@@ -138,7 +133,6 @@ body.static .rlab,body.static #fx,body.static #jump{display:none}
     <span class="in"><span class="code">MHF4U</span>
     <span class="name">Advanced Functions</span>
     <span class="sub">Grade 12 &middot; University Preparation</span></span></a>
-  <div class="rlab" id="lab2">Semester 2 &middot; Feb &ndash; Jun 2027</div>
   <a class="card" data-c="mdm" href="/MDM4U/">
     <span class="in"><span class="code">MDM4U</span>
     <span class="name">Data Management</span>
@@ -166,34 +160,32 @@ body.static .rlab,body.static #fx,body.static #jump{display:none}
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||innerWidth<860||innerHeight<560) return;
   document.body.classList.remove('static');
 
-  /* ── the field: semester 1 (MTH1W, MCR3U, MHF4U) in a row of three, semester 2 (MDM4U, MCV4U) centred
-     beneath. Every card arrives by its own show, in that order, and then stays exactly where it landed:
+  /* ── the field: MTH1W, MCR3U, MHF4U in a row of three, MDM4U and MCV4U stacked beneath MHF4U (no semester
+     labels: the courses may still change). Every card arrives by its own show, in that order, and then stays
+     exactly where it landed:
        MTH1W   algebra tiles tumble in, build the area model of (2x + 2)(x + 1) and flip over into the card
        MCR3U   a spinning unit circle traces y = sin x across the row; the card pops where the wave reaches it
        MHF4U   a cubic sweeps in from the right; where it meets the sine wave, the card pops
        MDM4U   two red dice are tossed in, tumble, bounce, roll together and become the card
-       MCV4U   a ski jump: a point rides a ramp up the left edge, flies over semester 1 and lands as the card  ── */
-  var PAD=10,CW=248,GAP=28,LBL=22,W=innerWidth,H=innerHeight;
+       MCV4U   a ski jump: a point rides a ramp up the left edge, flies over the row and lands as the card  ── */
+  var PAD=10,CW=248,GAP=28,W=innerWidth,H=innerHeight;
   var ids=['t1w','mcr','mhf','mdm','mcv'];
   var cards=ids.map(function(id){return document.querySelector('.card[data-c='+id+']')});
-  var labs=[document.getElementById('lab1'),document.getElementById('lab2')];
   var CH=124,chN=0;
   var L={slots:[],c:[]};
   function layout(){
     W=innerWidth;H=innerHeight;
     if(!chN--){chN=30;CH=cards[0].offsetHeight||CH}   // re-measured now and then: the web font arrives after the first frame
-    var topB=Math.min(H*.09+128,250),gridH=2*LBL+2*CH+GAP;   // just under the masthead (9vh + its height)
-    var y0=topB+Math.max(0,H-PAD-topB-gridH)*.32;
-    var x0=(W-(3*CW+2*GAP))/2,xs=(W-(2*CW+GAP))/2;
-    L.topB=topB;L.x0=x0;L.xs=xs;L.r1=y0+LBL;L.r2=L.r1+CH+GAP+LBL;
-    L.slots=[[x0,L.r1],[x0+CW+GAP,L.r1],[x0+2*(CW+GAP),L.r1],[xs,L.r2],[xs+CW+GAP,L.r2]];
+    var topB=Math.min(H*.09+128,250),gridH=3*CH+2*GAP;   // just under the masthead (9vh + its height)
+    var y0=topB+Math.max(0,H-PAD-topB-gridH)*.3;
+    var x0=(W-(3*CW+2*GAP))/2,x2=x0+2*(CW+GAP);
+    L.topB=topB;L.x0=x0;L.r1=y0;L.r2=y0+CH+GAP;L.r3=y0+2*(CH+GAP);
+    L.slots=[[x0,L.r1],[x0+CW+GAP,L.r1],[x2,L.r1],[x2,L.r2],[x2,L.r3]];
     L.c=L.slots.map(function(s){return [s[0]+CW/2,s[1]+CH/2]});
-    labs[0].style.transform='translate3d('+x0+'px,'+(L.r1-LBL+2)+'px,0)';
-    labs[1].style.transform='translate3d('+xs+'px,'+(L.r2-LBL+2)+'px,0)';
   }
   var home=[0,0,0,0,0];
   function tr(i,extra){var s=L.slots[i];return 'translate3d('+s[0]+'px,'+s[1]+'px,0)'+(extra||'')}
-  function arrive(i){home[i]=1;cards[i].classList.add('home');cards[i].style.opacity='';cards[i].style.visibility='';cards[i].style.transform=tr(i);if(i===0)labs[0].classList.add('show');if(i===3)labs[1].classList.add('show')}
+  function arrive(i){home[i]=1;cards[i].classList.add('home');cards[i].style.opacity='';cards[i].style.visibility='';cards[i].style.transform=tr(i)}
   var colN=0,cols=[];
   function col(i){if(!colN--){colN=30;cols=cards.map(function(c){return getComputedStyle(c).getPropertyValue('--ac').trim()})}return cols[i]}
   function backOut(q){var b=1.70158;return 1+(b+1)*Math.pow(q-1,3)+b*Math.pow(q-1,2)}
@@ -366,8 +358,8 @@ body.static .rlab,body.static #fx,body.static #jump{display:none}
   }
 
   /* ── MCV4U arrives by ski jump: a ramp draws itself up the left edge, a point rides it with its velocity vector
-        (f′ reading out), leaves at the crest along the horizontal tangent, flies over the semester-1 row as a
-        projectile and lands as the card in its own place ── */
+        (f′ reading out), leaves at the crest along the horizontal tangent, flies over the row as a projectile
+        and lands as the card at the foot of the right-hand column ── */
   var jumpEl=cards[4],jumpState=0,jumpT0=0,jumpLand=0,J=null;
   function startJump(now){
     var xa=PAD+8,xb=Math.max(L.x0-44,xa+120),base=H-PAD-16,crestY=L.r1-26,amp=base-crestY;

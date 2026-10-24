@@ -22,19 +22,20 @@ document.documentElement.setAttribute("data-theme",d?"dark":"light");})();
   --bg:#e7effa;--surface:#ffffff;
   --ink:#101a2e;--t2:#3a4a68;--t3:#75839f;
   --sh:0 2px 10px rgba(16,26,46,.08),0 10px 34px rgba(16,26,46,.10);
+  --tile-sq:#0284c7;--tile-x:#1f8a63;--tile-u:#e0a400;--tile-ink:#fff;--tile-uink:#3a2a00;
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#0a1120;--surface:#111b30;
   --ink:#d9e3f5;--t2:#97a8c8;--t3:#5c6d8f;
   --sh:0 2px 10px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
+  --tile-sq:#38bdf8;--tile-x:#43c79f;--tile-u:#ffc65c;--tile-ink:#04243a;--tile-uink:#3a2a00;
 }
 .card[data-c=mhf]{--ac:#38127d}.card[data-c=mcr]{--ac:#7c3aed}
-.card[data-c=t1w]{--ac:#0284c7}.card[data-c=spe]{--ac:#2f7d4f}.card[data-c=mdm]{--ac:#e8103d}.card[data-c=mcv]{--ac:#0a6f9e}
+.card[data-c=t1w]{--ac:#0284c7}.card[data-c=mdm]{--ac:#e8103d}.card[data-c=mcv]{--ac:#0a6f9e}
 [data-theme="dark"] .card[data-c=mhf]{--ac:#7d51e6}
 [data-theme="dark"] .card[data-c=mcr]{--ac:#a78bfa}
 [data-theme="dark"] .card[data-c=t1w]{--ac:#38bdf8}
-[data-theme="dark"] .card[data-c=spe]{--ac:#66c68f}
 [data-theme="dark"] .card[data-c=mdm]{--ac:#ff3b5f}
 [data-theme="dark"] .card[data-c=mcv]{--ac:#45baed}
 
@@ -44,7 +45,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);
   overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 
 /* ── theme toggle ────────────────────────────────────────── */
-.theme-btn{position:fixed;top:14px;right:14px;z-index:5;width:40px;height:40px;
+.theme-btn{position:fixed;top:14px;right:14px;z-index:6;width:40px;height:40px;
   border-radius:50%;background:var(--surface);color:var(--ink);
   border:1px solid rgba(127,140,170,.35);box-shadow:var(--sh);
   font-size:1.05rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0;
@@ -59,9 +60,10 @@ h1{font-weight:800;font-size:clamp(1.9rem,5vw,3rem);letter-spacing:-.02em;margin
 h1 em{font-family:Georgia,serif;font-weight:700}
 .tag{color:var(--t2);font-size:.95rem}
 
-/* ── cards ───────────────────────────────────────────────── */
+/* ── cards: two rows, semester 1 above semester 2; each arrives by its own show, then stays put ── */
 .card{position:absolute;left:0;top:0;width:248px;z-index:2;display:block;
   text-decoration:none;color:inherit;pointer-events:none;will-change:transform;
+  opacity:0;visibility:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   -webkit-tap-highlight-color:transparent}
 .card .in{display:block;background:var(--surface);border-radius:14px;padding:.95rem 1.1rem .95rem 1.25rem;
   border:1px solid color-mix(in srgb,var(--ac) 30%,transparent);
@@ -71,15 +73,29 @@ h1 em{font-family:Georgia,serif;font-weight:700}
   letter-spacing:.14em;color:var(--ac)}
 .card .name{display:block;font-weight:700;font-size:1.12rem;line-height:1.25;margin:.15rem 0 .3rem}
 .card .sub{display:block;font-size:.74rem;color:var(--t3)}
-.card.live{pointer-events:auto;cursor:pointer}
-.card.live:hover .in,.card.live:focus-visible .in{transform:translateY(-3px);
+.card.home{pointer-events:auto;cursor:pointer;opacity:1;visibility:visible}
+.card.home:hover .in,.card.home:focus-visible .in{transform:translateY(-3px);
   box-shadow:inset 4px 0 0 var(--ac),0 0 0 3px color-mix(in srgb,var(--ac) 14%,transparent),var(--sh)}
 .card:focus-visible{outline:none}
+.rlab{position:absolute;left:0;top:0;z-index:2;pointer-events:none;white-space:nowrap;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);font-weight:600;
+  opacity:0;transition:opacity .7s}
+.rlab.show{opacity:1}
+
+/* ── the two drawing layers: #fx behind the cards (the functions), #jump above them (the ski jump) ── */
+#fx,#jump{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#fx{z-index:1}#jump{z-index:4}
+
+/* ── MTH1W arrives as algebra tiles: eight tiles tumble in, snap into the area model of (2x + 2)(x + 1), and the model flips over to show the card ── */
+.tw{position:absolute;left:0;top:0;z-index:3;pointer-events:none;perspective:900px}
+.tw .model{position:absolute;inset:0;transform-style:preserve-3d}
+.tile{position:absolute;border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:.82rem;color:var(--tile-ink);
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4),0 6px 14px rgba(0,0,0,.18);
+  transition:transform .75s cubic-bezier(.2,1.25,.4,1),opacity .35s;backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform}
+.tile.sq{background:var(--tile-sq)}.tile.x{background:var(--tile-x)}.tile.u{background:var(--tile-u);color:var(--tile-uink)}
+.tlab{position:absolute;left:0;top:0;z-index:3;pointer-events:none;white-space:nowrap;font-family:var(--mono);font-size:.82rem;font-weight:600;opacity:0;transition:opacity .4s}
 
 /* ── MDM4U arrives by dice: two big red dice tossed in, tumbling, that come together to form its card ── */
-.card.seed,.card.seed2{opacity:0;visibility:hidden}
-/* ── MCV4U arrives by ski jump: a curve, a point with its velocity vector, a flight, a landing ── */
-#jump{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 .dw{position:absolute;left:0;top:0;width:64px;height:64px;perspective:700px;z-index:3;pointer-events:none;opacity:0;will-change:transform}
 .die{position:relative;width:64px;height:64px;transform-style:preserve-3d}
 .die .f{position:absolute;inset:0;background:#e8103d;border-radius:13px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
@@ -90,14 +106,13 @@ h1 em{font-family:Georgia,serif;font-weight:700}
 .die .f2{transform:rotateY(90deg) translateZ(32px)}.die .f5{transform:rotateY(-90deg) translateZ(32px)}
 .die .f3{transform:rotateX(90deg) translateZ(32px)}.die .f4{transform:rotateX(-90deg) translateZ(32px)}
 
-/* ── static fallback (reduced motion / no JS) ────────────── */
+/* ── static layout (reduced motion, no JS, or a small window) ────────────── */
 body.static{overflow:auto}
 body.static .masthead{position:static;margin-top:9vh;pointer-events:auto}
 body.static #field{display:flex;flex-wrap:wrap;justify-content:center;gap:1.1rem;
   padding:2rem 1.2rem 4rem;max-width:60rem;margin:0 auto}
-body.static .card{position:static;pointer-events:auto;transform:none!important}
-body.static .card.spe{pointer-events:none}
-body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
+body.static .card{position:static;pointer-events:auto;transform:none!important;opacity:1;visibility:visible}
+body.static .rlab,body.static #fx,body.static #jump{display:none}
 @media (max-width:560px){.card{width:min(230px,74vw)}}
 </style>
 </head>
@@ -110,30 +125,28 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
 </header>
 
 <main id="field">
-  <a class="card" data-c="mhf" href="/mhf4u/">
-    <span class="in"><span class="code">MHF4U</span>
-    <span class="name">Advanced Functions</span>
-    <span class="sub">Grade 12 &middot; University Preparation</span></span></a>
-  <a class="card" data-c="mcr" href="/mcr3u/">
-    <span class="in"><span class="code">MCR3U</span>
-    <span class="name">Functions</span>
-    <span class="sub">Grade 11 &middot; University Preparation</span></span></a>
+  <div class="rlab" id="lab1">Semester 1 &middot; Sep 2026 &ndash; Jan 2027</div>
   <a class="card" data-c="t1w" href="/mth1w/">
     <span class="in"><span class="code">MTH1W</span>
     <span class="name">Mathematics 9</span>
     <span class="sub">Grade 9 &middot; De-streamed</span></span></a>
-  <a class="card seed" data-c="mdm" href="/MDM4U/">
+  <a class="card" data-c="mcr" href="/mcr3u/">
+    <span class="in"><span class="code">MCR3U</span>
+    <span class="name">Functions</span>
+    <span class="sub">Grade 11 &middot; University Preparation</span></span></a>
+  <a class="card" data-c="mhf" href="/mhf4u/">
+    <span class="in"><span class="code">MHF4U</span>
+    <span class="name">Advanced Functions</span>
+    <span class="sub">Grade 12 &middot; University Preparation</span></span></a>
+  <div class="rlab" id="lab2">Semester 2 &middot; Feb &ndash; Jun 2027</div>
+  <a class="card" data-c="mdm" href="/MDM4U/">
     <span class="in"><span class="code">MDM4U</span>
     <span class="name">Data Management</span>
     <span class="sub">Grade 12 &middot; University Preparation</span></span></a>
-  <a class="card seed2" data-c="mcv" href="/MCV4U/">
+  <a class="card" data-c="mcv" href="/MCV4U/">
     <span class="in"><span class="code">MCV4U</span>
     <span class="name">Calculus &amp; Vectors</span>
     <span class="sub">Grade 12 &middot; University Preparation</span></span></a>
-  <div class="card spe" data-c="spe" aria-hidden="true">
-    <span class="in"><span class="code">GLX4O</span>
-    <span class="name">How to Get 100% on Any Test</span>
-    <span class="sub">Grade 12 &middot; Open</span></span></div>
 </main>
 
 <script>
@@ -149,103 +162,147 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
   });
   paintBtn();
 
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return; // static layout stays
+  // the show needs motion and room for a row of three; otherwise the static layout stays
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||innerWidth<860||innerHeight<560) return;
   document.body.classList.remove('static');
 
-  var DODGE_END=5000, SETTLE=6000;         // dodge for 5 s, fully calm by 6 s
-  var R=180, FLEE=5200, VFLEE=850;         // flee radius / accel / speed cap
-  var cards=[].slice.call(document.querySelectorAll('.card')).filter(function(el){return !el.classList.contains('seed')&&!el.classList.contains('seed2')});
-  var W=innerWidth,H=innerHeight,PAD=10;
-  var mouse={x:-1e4,y:-1e4,on:false}, touchTimer=null;
+  /* ── the field: semester 1 (MTH1W, MCR3U, MHF4U) in a row of three, semester 2 (MDM4U, MCV4U) centred
+     beneath. Every card arrives by its own show, in that order, and then stays exactly where it landed:
+       MTH1W   algebra tiles tumble in, build the area model of (2x + 2)(x + 1) and flip over into the card
+       MCR3U   a spinning unit circle traces y = sin x across the row; the card pops where the wave reaches it
+       MHF4U   a cubic sweeps in from the right; where it meets the sine wave, the card pops
+       MDM4U   two red dice are tossed in, tumble, bounce, roll together and become the card
+       MCV4U   a ski jump: a point rides a ramp up the left edge, flies over semester 1 and lands as the card  ── */
+  var PAD=10,CW=248,GAP=28,LBL=22,W=innerWidth,H=innerHeight;
+  var ids=['t1w','mcr','mhf','mdm','mcv'];
+  var cards=ids.map(function(id){return document.querySelector('.card[data-c='+id+']')});
+  var labs=[document.getElementById('lab1'),document.getElementById('lab2')];
+  var CH=124,chN=0;
+  var L={slots:[],c:[]};
+  function layout(){
+    W=innerWidth;H=innerHeight;
+    if(!chN--){chN=30;CH=cards[0].offsetHeight||CH}   // re-measured now and then: the web font arrives after the first frame
+    var topB=Math.min(H*.09+128,250),gridH=2*LBL+2*CH+GAP;   // just under the masthead (9vh + its height)
+    var y0=topB+Math.max(0,H-PAD-topB-gridH)*.32;
+    var x0=(W-(3*CW+2*GAP))/2,xs=(W-(2*CW+GAP))/2;
+    L.topB=topB;L.x0=x0;L.xs=xs;L.r1=y0+LBL;L.r2=L.r1+CH+GAP+LBL;
+    L.slots=[[x0,L.r1],[x0+CW+GAP,L.r1],[x0+2*(CW+GAP),L.r1],[xs,L.r2],[xs+CW+GAP,L.r2]];
+    L.c=L.slots.map(function(s){return [s[0]+CW/2,s[1]+CH/2]});
+    labs[0].style.transform='translate3d('+x0+'px,'+(L.r1-LBL+2)+'px,0)';
+    labs[1].style.transform='translate3d('+xs+'px,'+(L.r2-LBL+2)+'px,0)';
+  }
+  var home=[0,0,0,0,0];
+  function tr(i,extra){var s=L.slots[i];return 'translate3d('+s[0]+'px,'+s[1]+'px,0)'+(extra||'')}
+  function arrive(i){home[i]=1;cards[i].classList.add('home');cards[i].style.opacity='';cards[i].style.visibility='';cards[i].style.transform=tr(i);if(i===0)labs[0].classList.add('show');if(i===3)labs[1].classList.add('show')}
+  var colN=0,cols=[];
+  function col(i){if(!colN--){colN=30;cols=cards.map(function(c){return getComputedStyle(c).getPropertyValue('--ac').trim()})}return cols[i]}
+  function backOut(q){var b=1.70158;return 1+(b+1)*Math.pow(q-1,3)+b*Math.pow(q-1,2)}
+  function easeIO(k){return k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2}
 
-  var boxes=cards.map(function(el){
-    var spe=el.classList.contains('spe');
-    return {el:el,spe:spe,w:248,h:120,x:0,y:0,vx:0,vy:0};
-  });
-
-  // scatter without overlaps (best effort), below the masthead —
-  // deferred to the first frame with a real viewport
-  function scatter(){
-    var topY=Math.min(H*.34,260);
-    boxes.forEach(function(b,i){
-      b.w=b.el.offsetWidth||248; b.h=b.el.offsetHeight||120;
-      for(var t=0;t<80;t++){
-        b.x=PAD+Math.random()*Math.max(40,W-b.w-2*PAD);
-        b.y=topY+Math.random()*Math.max(40,H-b.h-topY-PAD);
-        var ok=true;
-        for(var j=0;j<i;j++){var o=boxes[j];
-          if(b.x<o.x+o.w+16&&o.x<b.x+b.w+16&&b.y<o.y+o.h+16&&o.y<b.y+b.h+16){ok=false;break}}
-        if(ok)break;
-      }
-      var sp=260+Math.random()*180, a=Math.random()*Math.PI*2;
-      b.vx=Math.cos(a)*sp; b.vy=Math.sin(a)*sp;
-    });
+  /* canvases: fx behind the cards, jump above them */
+  var fx=document.createElement('canvas'),fxx=fx.getContext('2d'),jc=document.createElement('canvas'),jx=jc.getContext('2d'),cw=0,chh=0;
+  fx.id='fx';jc.id='jump';document.body.appendChild(fx);document.body.appendChild(jc);
+  function sizeCanvases(){
+    if(cw===W&&chh===H)return;cw=W;chh=H;var dpr=Math.min(devicePixelRatio||1,2);
+    [[fx,fxx],[jc,jx]].forEach(function(p){p[0].width=W*dpr;p[0].height=H*dpr;p[1].setTransform(dpr,0,0,dpr,0,0)});
   }
 
-  function aim(e){mouse.x=e.clientX;mouse.y=e.clientY;mouse.on=true;
-    if(e.pointerType==='touch'){clearTimeout(touchTimer);
-      touchTimer=setTimeout(function(){mouse.on=false},400)}}
-  addEventListener('pointermove',aim,{passive:true});
-  addEventListener('pointerdown',function(e){aim(e);
-    // a tap ON or NEAR a dodging card sends it off at full speed instantly
-    var el2=t0===null?0:performance.now()-t0;
-    boxes.forEach(function(b){
-      if(!(b.spe||el2<DODGE_END))return;
-      if(b.spe&&overlapsPointer(b,e.clientX,e.clientY)){blink(b,e.clientX,e.clientY);return}
-      var dx=b.x+b.w/2-e.clientX, dy=b.y+b.h/2-e.clientY, d=Math.hypot(dx,dy);
-      if(d-Math.min(b.w,b.h)/2<(b.spe?260:R)){
-        if(d<8){var ra=Math.random()*Math.PI*2;dx=Math.cos(ra);dy=Math.sin(ra);d=1}
-        // blend the escape toward the viewport centre so it finds open space
-        var tx=innerWidth/2-b.x-b.w/2, ty=innerHeight/2-b.y-b.h/2, tl=Math.hypot(tx,ty)||1;
-        var ex=dx/d+tx/tl*.45, ey=dy/d+ty/tl*.45, elen=Math.hypot(ex,ey)||1;
-        var v=b.spe?2200:850;
-        b.vx=ex/elen*v; b.vy=ey/elen*v;
-        if(e.pointerType==='touch'){
-          // no cursor warning on touch, so dash clear of the finger in one frame
-          var D=Math.hypot(b.w,b.h)*.9+70, W2=innerWidth, H2=innerHeight, tB=Math.min(H2*.30,250);
-          var nx=b.x+ex/elen*D, ny=b.y+ey/elen*D;
-          nx=Math.min(Math.max(nx,PAD),W2-b.w-PAD); ny=Math.min(Math.max(ny,tB),H2-b.h-PAD);
-          if(Math.hypot(nx+b.w/2-e.clientX,ny+b.h/2-e.clientY)<170){ // cornered: cut across the middle
-            var ml=Math.hypot(W2/2-b.w/2-b.x,H2/2-b.h/2-b.y)||1;
-            nx=b.x+(W2/2-b.w/2-b.x)/ml*D; ny=b.y+(H2/2-b.h/2-b.y)/ml*D;
-            nx=Math.min(Math.max(nx,PAD),W2-b.w-PAD); ny=Math.min(Math.max(ny,tB),H2-b.h-PAD);
-          }
-          b.x=nx; b.y=ny;
-        }
-      }
+  /* ── MTH1W: algebra tiles ── */
+  var T_TILE=250,T_FLIP=T_TILE+90*7+780,FLIP_D=720,tw=null,model=null,tlab=null,tState=0;
+  function buildTiles(){
+    var s=L.slots[0],uw=CW/8,uh=CH/4,X=3;
+    tw=document.createElement('div');tw.className='tw';tw.style.width=CW+'px';tw.style.height=CH+'px';tw.style.transform='translate3d('+s[0]+'px,'+s[1]+'px,0)';
+    model=document.createElement('div');model.className='model';tw.appendChild(model);
+    var spec=[['sq',0,0,X,X,'x²'],['sq',X,0,X,X,'x²'],['x',2*X,0,1,X,'x'],['x',2*X+1,0,1,X,'x'],['x',0,X,X,1,'x'],['x',X,X,X,1,'x'],['u',2*X,X,1,1,'1'],['u',2*X+1,X,1,1,'1']];
+    spec.forEach(function(t,i){
+      var d=document.createElement('div');d.className='tile '+t[0];
+      d.style.left=t[1]*uw+1+'px';d.style.top=t[2]*uh+1+'px';d.style.width=t[3]*uw-2+'px';d.style.height=t[4]*uh-2+'px';d.textContent=t[5];
+      var a=Math.random()*6.283,R=420+Math.random()*420;
+      d.style.transform='translate3d('+Math.cos(a)*R+'px,'+Math.sin(a)*R+'px,'+(-520-Math.random()*420)+'px) rotateX('+(Math.random()*300-150)+'deg) rotateY('+(Math.random()*300-150)+'deg) rotateZ('+(Math.random()*160-80)+'deg)';
+      d.style.opacity=0;model.appendChild(d);
+      setTimeout(function(){d.style.transform='';d.style.opacity=1},T_TILE+90*i);
     });
-  },{passive:true});
-  document.documentElement.addEventListener('mouseleave',function(){mouse.on=false});
+    document.body.appendChild(tw);
+    tlab=document.createElement('div');tlab.className='tlab';tlab.textContent='(2x + 2)(x + 1)';tlab.style.color=col(0);
+    tlab.style.transform='translate3d('+s[0]+'px,'+(s[1]-26)+'px,0)';document.body.appendChild(tlab);
+    setTimeout(function(){tlab.style.opacity=1},T_TILE+300);
+    tState=1;
+  }
+  function stepTiles(el){
+    if(tState!==1||el<T_FLIP)return;
+    var q=Math.min((el-T_FLIP)/FLIP_D,1),e=easeIO(q);
+    model.style.transform='rotateY('+(180*e)+'deg)';
+    var c=cards[0];c.style.visibility='visible';c.style.opacity=1;c.style.transform=tr(0,' perspective(900px) rotateY('+(-180+180*e)+'deg)');
+    if(q>.5&&tlab.textContent.length<20){tlab.textContent='(2x + 2)(x + 1) = 2x² + 4x + 2';setTimeout(function(){tlab.style.opacity=0},900)}
+    if(q>=1){tState=2;arrive(0);setTimeout(function(){tw.remove();tlab.remove()},1300)}
+  }
 
-  // last-resort escape: pick a landing spot far from the pointer and clear of other cards
-  function openSpot(b,px,py){
-    var W2=innerWidth,H2=innerHeight,tB=Math.min(H2*.30,250),best=null,bestScore=-1;
-    for(var i=0;i<14;i++){
-      var cx2,cy2;
-      if(i===0){cx2=W2/2-b.w/2;cy2=(tB+H2-b.h)/2}
-      else{cx2=PAD+Math.random()*Math.max(40,W2-b.w-2*PAD);
-           cy2=tB+Math.random()*Math.max(40,H2-b.h-tB-PAD)}
-      var dCur=Math.hypot(cx2+b.w/2-px,cy2+b.h/2-py),clear=1;
-      boxes.forEach(function(o){if(o!==b&&
-        cx2<o.x+o.w+14&&o.x<cx2+b.w+14&&cy2<o.y+o.h+14&&o.y<cy2+b.h+14)clear=0});
-      var score=Math.min(dCur,520)+clear*400;
-      if(score>bestScore){bestScore=score;best={x:cx2,y:cy2}}
+  /* ── MCR3U and MHF4U: the sine wave and the cubic ── */
+  var T_F=2000,V=3.4,VC=2.7,A=46,K=95,F=null,popT=[0,0,0,0,0];
+  function fxSetup(){
+    var c1=L.c[1],c2=L.c[2];
+    F={m:(c1[0]+c2[0])/2,U:(c2[0]-c1[0])/2,yc:c1[1]};
+    F.cx=Math.max(A+18,L.x0-118);F.Xs=(F.cx+A+14-F.m)/F.U;F.Xend=1.5;
+    F.t1=T_F+(-1-F.Xs)/V*1000;F.t2=T_F+(1-F.Xs)/V*1000;F.tEnd=T_F+(F.Xend-F.Xs)/V*1000;
+    F.tc0=F.t2-(.4/VC)*1000;F.tcEnd=F.tc0+(2.9/VC)*1000;
+    F.fade0=Math.max(F.tEnd,F.tcEnd)+200;F.fade1=F.fade0+600;
+  }
+  function px(X){return F.m+X*F.U}
+  function sy(X){return F.yc-A*Math.sin(Math.PI*X)}
+  function cy(X){return F.yc-K*((X+1)*X*(X-1))}
+  function curve(fn,X0,X1,c,w,alpha){
+    var n=Math.max(2,Math.ceil(Math.abs(X1-X0)*60));
+    fxx.globalAlpha=alpha;fxx.strokeStyle=c;fxx.lineWidth=w;fxx.lineCap='round';fxx.lineJoin='round';
+    fxx.shadowColor=c;fxx.shadowBlur=10;fxx.beginPath();
+    for(var i=0;i<=n;i++){var X=X0+(X1-X0)*i/n;i?fxx.lineTo(px(X),fn(X)):fxx.moveTo(px(X),fn(X))}
+    fxx.stroke();fxx.shadowBlur=0;fxx.globalAlpha=1;
+  }
+  function dot(x,y,r,c){fxx.beginPath();fxx.arc(x,y,r,0,6.283);fxx.fillStyle=c;fxx.fill()}
+  function label(t,x,y,c,alpha){fxx.globalAlpha=alpha;fxx.font="600 14px 'IBM Plex Mono',monospace";fxx.fillStyle=c;fxx.fillText(t,x,y);fxx.globalAlpha=1}
+  function pop(i,now){if(!popT[i]&&!home[i])popT[i]=now}
+  function stepPops(now){
+    for(var i=0;i<5;i++){if(!popT[i]||home[i])continue;
+      var q=Math.min((now-popT[i])/520,1),e=backOut(q),c=cards[i];
+      c.style.visibility='visible';c.style.opacity=Math.min(1,q*3);c.style.transform=tr(i,' scale('+(.45+.55*e)+')');
+      var k=Math.min((now-popT[i])/700,1),cc=L.c[i];
+      fxx.globalAlpha=(1-k)*.8;fxx.strokeStyle=col(i);fxx.lineWidth=3*(1-k)+.5;fxx.beginPath();fxx.arc(cc[0],cc[1],16+170*k,0,6.283);fxx.stroke();fxx.globalAlpha=1;
+      if(q>=1&&k>=1)arrive(i);
     }
-    return best;
   }
-  function blink(b,px,py){
-    var t=openSpot(b,px,py);
-    b.x=t.x; b.y=t.y;
-    var dx=b.x+b.w/2-px, dy=b.y+b.h/2-py, dl=Math.hypot(dx,dy)||1;
-    b.vx=dx/dl*600; b.vy=dy/dl*600; b.ang=Math.atan2(b.vy,b.vx);
-  }
-  function overlapsPointer(b,px,py){
-    return px>b.x-8&&px<b.x+b.w+8&&py>b.y-8&&py<b.y+b.h+8;
+  function stepFx(el,now){
+    fxx.clearRect(0,0,W,H);
+    if(F&&el>=T_F&&el<F.fade1){
+      var fade=el<F.fade0?1:1-(el-F.fade0)/(F.fade1-F.fade0),c3=col(1),c4=col(2);
+      var Xt=Math.min(F.Xs+V*(el-T_F)/1000,F.Xend),th=Math.PI*Xt;
+      curve(sy,F.Xs,Xt,c3,3,.9*fade);
+      /* the unit circle generating the wave: a radius sweeps round, a dashed line carries its height to the tip */
+      var tracing=Xt<F.Xend,ca=tracing?1:Math.max(0,1-(el-F.tEnd)/350);
+      if(ca>0){
+        var Px=F.cx+A*Math.cos(th),Py=F.yc-A*Math.sin(th);
+        fxx.globalAlpha=.55*ca*fade;fxx.strokeStyle=c3;fxx.lineWidth=1.5;fxx.beginPath();fxx.arc(F.cx,F.yc,A,0,6.283);fxx.stroke();
+        fxx.beginPath();fxx.moveTo(F.cx-A-8,F.yc);fxx.lineTo(F.cx+A+8,F.yc);fxx.moveTo(F.cx,F.yc-A-8);fxx.lineTo(F.cx,F.yc+A+8);fxx.stroke();
+        fxx.globalAlpha=.9*ca*fade;fxx.lineWidth=2.2;fxx.beginPath();fxx.moveTo(F.cx,F.yc);fxx.lineTo(Px,Py);fxx.stroke();
+        fxx.setLineDash([4,6]);fxx.globalAlpha=.6*ca*fade;fxx.lineWidth=1.4;fxx.beginPath();fxx.moveTo(Px,Py);fxx.lineTo(px(Xt),Py);fxx.stroke();fxx.setLineDash([]);
+        fxx.globalAlpha=ca*fade;dot(Px,Py,4,c3);dot(px(Xt),sy(Xt),4.5,c3);
+        var deg=Math.round(((th*180/Math.PI)%360+360)%360);
+        label('θ = '+deg+'°',F.cx-30,F.yc+A+24,c3,.85*ca*fade);
+        label('y = sin x',px(Xt)+12,sy(Xt)-12,c3,.9*ca*fade);
+        fxx.globalAlpha=1;
+      }
+      if(el>=F.tc0){
+        var Xc=Math.max(1.4-VC*(el-F.tc0)/1000,-1.5);
+        curve(cy,1.4,Xc,c4,3,.9*fade);
+        if(Xc>-1.5){fxx.globalAlpha=fade;dot(px(Xc),cy(Xc),4.5,c4);label('y = x³ − x',px(Xc)-96,cy(Xc)-14,c4,.9*fade);fxx.globalAlpha=1}
+      }
+      if(el>=F.t1)pop(1,now);
+      if(el>=F.t2)pop(2,now);
+    }
+    stepPops(now);
   }
 
-  // ── MDM4U arrives by dice: at 2 s two big red dice are tossed in from the bottom corners, tumble through the
-  //    air, bounce, roll to a stop on a face, slide together and become the card, which then joins the others ──
-  var seedEl=document.querySelector('.card.seed'), dice=[], diceState=0, M=null, formT=0;
+  /* ── MDM4U arrives by dice: two big red dice tossed in from the bottom corners, tumble through the air,
+        bounce, roll to a stop on a face, slide together and become the card ── */
+  var seedEl=cards[3],dice=[],diceState=0,M=null,formT=0,T_D=0;
   function mkDie(){
     var w=document.createElement('div');w.className='dw';var d=document.createElement('div');d.className='die';
     var P={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
@@ -256,7 +313,7 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
     return{w:w,d:d,x:0,y:0,vx:0,vy:0,rx:0,ry:0,rz:0,wx:0,wy:0,wz:0,bounces:0,done:false};
   }
   function tossDice(){
-    var topB=Math.min(H*.30,250);M={x:W/2,y:topB+(H-topB)*.52};
+    M={x:L.c[3][0],y:L.c[3][1]};
     var g=1500,tf=1.15;
     [[-90,H+60,-72],[W+90,H+60,72]].forEach(function(s){
       var d=mkDie();d.x=s[0];d.y=s[1];var tx=M.x+s[2],ty=M.y;
@@ -304,200 +361,96 @@ body.static .card.seed,body.static .card.seed2{opacity:1;visibility:visible}
       d.x=d.sx+(tx-d.sx)*Math.min(1,e*1.15);d.y=d.sy+(ty-d.sy)*Math.min(1,e*1.15);
       d.w.style.opacity=1-q;paintDie(d,q?' scale('+(1-q*.45)+')':'');
     });
-    if(q>0){
-      var cw=seedEl.offsetWidth||248,ch=seedEl.offsetHeight||120;
-      seedEl.style.visibility='visible';seedEl.style.opacity=q;
-      seedEl.style.transform='translate3d('+(M.x-cw/2)+'px,'+(M.y-ch/2)+'px,0) scale('+(.55+.45*q)+')';
-    }
-    if(k>=1){
-      diceState=3;dice.forEach(function(d){d.w.remove()});
-      var cw2=seedEl.offsetWidth||248,ch2=seedEl.offsetHeight||120;
-      var b={el:seedEl,spe:false,w:cw2,h:ch2,x:M.x-cw2/2,y:M.y-ch2/2,vx:(Math.random()-.5)*140,vy:(Math.random()-.5)*140};
-      boxes.push(b);seedEl.classList.remove('seed');seedEl.style.opacity='';seedEl.style.visibility='';
-      if(live)seedEl.classList.add('live');
-    }
+    if(q>0){seedEl.style.visibility='visible';seedEl.style.opacity=q;seedEl.style.transform=tr(3,' scale('+(.55+.45*q)+')')}
+    if(k>=1){diceState=3;dice.forEach(function(d){d.w.remove()});arrive(3)}
   }
 
-  // ── MCV4U arrives by ski jump: once the dice have made their card, a curve draws itself across the lower left,
-  //    a point rides it with its velocity vector (f′ reading out), leaves at the crest along the horizontal tangent
-  //    and flies as a projectile; the card lands where it comes down and joins the others ──
-  var jumpEl=document.querySelector('.card.seed2'), jc=document.createElement('canvas'), jx=jc.getContext('2d'), jumpState=0, jumpT0=0, jumpLand=0, J=null;
-  jc.id='jump'; document.body.appendChild(jc);
+  /* ── MCV4U arrives by ski jump: a ramp draws itself up the left edge, a point rides it with its velocity vector
+        (f′ reading out), leaves at the crest along the horizontal tangent, flies over the semester-1 row as a
+        projectile and lands as the card in its own place ── */
+  var jumpEl=cards[4],jumpState=0,jumpT0=0,jumpLand=0,J=null;
   function startJump(now){
-    if(!placed||!(W>320&&H>240))return;                                               // not before the field has a real viewport
-    var dpr=Math.min(devicePixelRatio||1,2); jc.width=W*dpr; jc.height=H*dpr; jx.setTransform(dpr,0,0,dpr,0,0);
-    var topB=Math.min(H*.30,250), xa=W*.03, xb=W*.5, base=Math.min(H-PAD-16,H*.94), amp=Math.min((base-topB)*.72,H*.46);
-    J={xa:xa,xb:xb,base:base,amp:amp,M:{x:W*.76,y:topB+(H-topB)*.62},col:getComputedStyle(jumpEl).getPropertyValue('--ac').trim()||'#0a6f9e',trail:[]};
-    J.f=function(u){return u*u*(3-2*u)}; J.fp=function(u){return 6*u*(1-u)};         // the ramp: a rise that flattens at the crest
-    J.px=function(u){return xa+(xb-xa)*u}; J.py=function(u){return base-amp*J.f(u)};
+    var xa=PAD+8,xb=Math.max(L.x0-44,xa+120),base=H-PAD-16,crestY=L.r1-26,amp=base-crestY;
+    J={xa:xa,xb:xb,base:base,amp:amp,M:{x:L.c[4][0],y:L.c[4][1]},col:col(4),trail:[]};
+    J.f=function(u){return u*u*(3-2*u)};J.fp=function(u){return 6*u*(1-u)};
+    J.px=function(u){return xa+(xb-xa)*u};J.py=function(u){return base-amp*J.f(u)};
     J.crest={x:J.px(1),y:J.py(1)};
-    var dx=J.M.x-J.crest.x, dy=Math.max(J.M.y-J.crest.y,60);
-    J.g=1700; J.tf=Math.sqrt(2*dy/J.g); J.vx=dx/J.tf;                                   // horizontal launch, lands at M
-    J.ride=Math.min(1.6,Math.max(.8,2*(xb-xa)/J.vx));                                  // accelerate up the ramp so the lip speed IS the launch speed
-    jumpState=1; jumpT0=now;
+    var dx=J.M.x-J.crest.x,dy=Math.max(J.M.y-J.crest.y,60);
+    J.g=1700;J.tf=Math.sqrt(2*dy/J.g);J.vx=dx/J.tf;
+    J.ride=Math.min(1.6,Math.max(.55,2*(xb-xa)/J.vx));
+    jumpState=1;jumpT0=now;
   }
   function jArrow(x1,y1,x2,y2,c,w){
-    var dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy); if(L<1)return;
-    jx.strokeStyle=c; jx.fillStyle=c; jx.lineWidth=w; jx.lineCap='round';
-    jx.beginPath(); jx.moveTo(x1,y1); jx.lineTo(x2,y2); jx.stroke();
-    var ux=dx/L,uy=dy/L,hs=Math.min(10,L*.4);
-    jx.beginPath(); jx.moveTo(x2,y2); jx.lineTo(x2-ux*hs-uy*hs*.45,y2-uy*hs+ux*hs*.45); jx.lineTo(x2-ux*hs+uy*hs*.45,y2-uy*hs-ux*hs*.45); jx.closePath(); jx.fill();
+    var dx=x2-x1,dy=y2-y1,Ln=Math.hypot(dx,dy);if(Ln<1)return;
+    jx.strokeStyle=c;jx.fillStyle=c;jx.lineWidth=w;jx.lineCap='round';
+    jx.beginPath();jx.moveTo(x1,y1);jx.lineTo(x2,y2);jx.stroke();
+    var ux=dx/Ln,uy=dy/Ln,hs=Math.min(10,Ln*.4);
+    jx.beginPath();jx.moveTo(x2,y2);jx.lineTo(x2-ux*hs-uy*hs*.45,y2-uy*hs+ux*hs*.45);jx.lineTo(x2-ux*hs+uy*hs*.45,y2-uy*hs-ux*hs*.45);jx.closePath();jx.fill();
   }
   function jDot(x,y,r,c){jx.beginPath();jx.arc(x,y,r,0,6.283);jx.fillStyle=c;jx.fill()}
   function jLabel(t,x,y,c){jx.font="600 14px 'IBM Plex Mono',monospace";jx.fillStyle=c;jx.fillText(t,x,y)}
   function jCurve(u1,c,alpha){
-    jx.globalAlpha=alpha; jx.strokeStyle=c; jx.lineWidth=3.2; jx.lineCap='round'; jx.beginPath();
-    for(var i=0;i<=60;i++){var u=u1*i/60; i?jx.lineTo(J.px(u),J.py(u)):jx.moveTo(J.px(u),J.py(u))}
-    jx.stroke(); jx.globalAlpha=1;
+    jx.globalAlpha=alpha;jx.strokeStyle=c;jx.lineWidth=3.2;jx.lineCap='round';jx.beginPath();
+    for(var i=0;i<=60;i++){var u=u1*i/60;i?jx.lineTo(J.px(u),J.py(u)):jx.moveTo(J.px(u),J.py(u))}
+    jx.stroke();jx.globalAlpha=1;
   }
   function jTrail(c,alpha){
-    if(J.trail.length<2)return; jx.globalAlpha=alpha; jx.strokeStyle=c; jx.lineWidth=2; jx.setLineDash([5,6]); jx.beginPath();
-    J.trail.forEach(function(p,i){i?jx.lineTo(p[0],p[1]):jx.moveTo(p[0],p[1])}); jx.stroke(); jx.setLineDash([]); jx.globalAlpha=1;
+    if(J.trail.length<2)return;jx.globalAlpha=alpha;jx.strokeStyle=c;jx.lineWidth=2;jx.setLineDash([5,6]);jx.beginPath();
+    J.trail.forEach(function(p,i){i?jx.lineTo(p[0],p[1]):jx.moveTo(p[0],p[1])});jx.stroke();jx.setLineDash([]);jx.globalAlpha=1;
   }
   function stepJump(now){
     if(!jumpState||jumpState===3)return;
-    var t=(now-jumpT0)/1000, c=J.col, DRAW=.6, RIDE=J.ride; jx.clearRect(0,0,W,H);
+    var t=(now-jumpT0)/1000,c=J.col,DRAW=.6,RIDE=J.ride;jx.clearRect(0,0,W,H);
     if(jumpState===1){
-      var pd=Math.min(t/DRAW,1); jCurve(1-Math.pow(1-pd,3),c,.9);
+      var pd=Math.min(t/DRAW,1);jCurve(1-Math.pow(1-pd,3),c,.9);
       if(t<DRAW)return;
-      var tr=t-DRAW;
-      if(tr<RIDE){                                                                   // the ride up the ramp
-        var k=tr/RIDE, u=k*k, x=J.px(u), y=J.py(u);                                    // ease-in: gathering speed up the ramp
-        var k2=k+.01, u2=k2*k2, vx=(J.px(u2)-x)/(.01*RIDE), vy=(J.py(u2)-y)/(.01*RIDE);
-        jArrow(x,y,x+vx*.2,y+vy*.2,c,3); jDot(x,y,6.5,c);
+      var trd=t-DRAW;
+      if(trd<RIDE){
+        var k=trd/RIDE,u=k*k,x=J.px(u),y=J.py(u);
+        var k2=k+.01,u2=k2*k2,vx=(J.px(u2)-x)/(.01*RIDE),vy=(J.py(u2)-y)/(.01*RIDE);
+        jArrow(x,y,x+vx*.2,y+vy*.2,c,3);jDot(x,y,6.5,c);
         var m=J.fp(u)*J.amp/(J.xb-J.xa);
         jLabel("f′ = "+m.toFixed(2),x+14,y-16,c);
         return;
       }
-      var tf=tr-RIDE;
-      if(tf<J.tf){                                                                   // the flight: horizontal launch, gravity
-        var fx=J.crest.x+J.vx*tf, fy=J.crest.y+.5*J.g*tf*tf, fvy=J.g*tf;
-        J.trail.push([fx,fy]); jTrail(c,.7);
-        jArrow(fx,fy,fx+J.vx*.2,fy+fvy*.2,c,3); jDot(fx,fy,6.5,c);
-        jLabel("v = ("+(J.vx/100).toFixed(1)+", "+(-fvy/100).toFixed(1).replace("-","−")+")",fx+14,fy-16,c);
+      var tf=trd-RIDE;
+      if(tf<J.tf){
+        var fxp=J.crest.x+J.vx*tf,fyp=J.crest.y+.5*J.g*tf*tf,fvy=J.g*tf;
+        J.trail.push([fxp,fyp]);jTrail(c,.7);
+        jArrow(fxp,fyp,fxp+J.vx*.2,fyp+fvy*.2,c,3);jDot(fxp,fyp,6.5,c);
+        jLabel("v = ("+(J.vx/100).toFixed(1)+", "+(-fvy/100).toFixed(1).replace("-","−")+")",fxp+14,fyp-16,c);
         return;
       }
-      jumpState=2; jumpLand=now; jumpEl.style.visibility='visible';
+      jumpState=2;jumpLand=now;jumpEl.style.visibility='visible';
     }
     // state 2: the card lands with a bounce while the drawing fades
-    var q=Math.min((now-jumpLand)/450,1), b=1.70158, e=1+(b+1)*Math.pow(q-1,3)+b*Math.pow(q-1,2), fade=1-Math.min((now-jumpLand)/900,1);
-    jCurve(1,c,.9*fade); jTrail(c,.7*fade);
-    var cw=jumpEl.offsetWidth||248, ch=jumpEl.offsetHeight||120;
+    var q=Math.min((now-jumpLand)/450,1),e=backOut(q),fade=1-Math.min((now-jumpLand)/900,1);
+    jCurve(1,c,.9*fade);jTrail(c,.7*fade);
     jumpEl.style.opacity=Math.min(1,q*2.5);
-    jumpEl.style.transform='translate3d('+(J.M.x-cw/2)+'px,'+(J.M.y-ch/2)+'px,0) scale('+(.5+.5*e)+')';
-    if(fade<=0){
-      jumpState=3; jx.clearRect(0,0,W,H);
-      var bb={el:jumpEl,spe:false,w:cw,h:ch,x:J.M.x-cw/2,y:J.M.y-ch/2,vx:J.vx*.15,vy:0};
-      boxes.push(bb); jumpEl.classList.remove('seed2'); jumpEl.style.opacity=''; jumpEl.style.visibility='';
-      if(live)jumpEl.classList.add('live');
-    }
+    jumpEl.style.transform=tr(4,' scale('+(.5+.5*e)+')');
+    if(fade<=0){jumpState=3;jx.clearRect(0,0,W,H);arrive(4)}
   }
 
-  var t0=null,last=null,live=false,placed=false;
+  var t0=null,last=null,started=false;
   function frame(now){
-    W=innerWidth; H=innerHeight;
-    if(!placed){
-      if(W<320||H<240){requestAnimationFrame(frame);return}
-      scatter(); placed=true;
-    }
+    layout();sizeCanvases();
+    if(W<320||H<240){requestAnimationFrame(frame);return}
     if(t0===null){t0=now;last=now}
-    var dt=Math.min((now-last)/1000,.032); last=now;
+    var dt=Math.min((now-last)/1000,.032);last=now;
     var el=now-t0;
-    if(diceState===0&&el>=2000)tossDice();
+    if(!started){started=true;buildTiles();fxSetup();T_D=F.fade0-300}
+    for(var i=0;i<5;i++)if(home[i])cards[i].style.transform=tr(i);   // placed cards follow the layout if the window changes
+    stepTiles(el);
+    stepFx(el,now);
+    if(diceState===0&&el>=T_D)tossDice();
     stepDice(dt,now);
-    if(jumpState===0&&el>=5200&&(diceState===3||el>=7000))startJump(now);
+    if(jumpState===0&&el>=T_D+2100&&(diceState===3||el>=T_D+4200))startJump(now);
     stepJump(now);
-
-    if(!live&&el>=DODGE_END){live=true;
-      boxes.forEach(function(b){if(!b.spe)b.el.classList.add('live')})}
-
-    var u=Math.min(el/SETTLE,1), drag=.05+2.4*u*u*u;
-    var topB=Math.min(H*.30,250);
-
-    boxes.forEach(function(b){
-      var dodging=b.spe||el<DODGE_END, fled=false;
-
-      // the pointer must NEVER rest on SPE, no matter what it's wedged against
-      if(b.spe&&mouse.on&&overlapsPointer(b,mouse.x,mouse.y)) blink(b,mouse.x,mouse.y);
-
-      var RR=b.spe?220:R;
-      var tcx=W/2-b.x-b.w/2, tcy=H/2-b.y-b.h/2, td=Math.hypot(tcx,tcy)||1;
-      if(dodging&&mouse.on){
-        var cx=b.x+b.w/2, cy=b.y+b.h/2, dx=cx-mouse.x, dy=cy-mouse.y;
-        var d=Math.hypot(dx,dy)-Math.min(b.w,b.h)/2;
-        if(d<RR){
-          if(Math.hypot(dx,dy)<8){var ra=Math.random()*Math.PI*2;dx=Math.cos(ra)*20;dy=Math.sin(ra)*20}
-          var k=Math.max(d,18), s=FLEE*Math.pow(1-Math.max(d,0)/RR,2);
-          if(b.spe)s*=2;
-          b.vx+=dx/k*s*dt; b.vy+=dy/k*s*dt; fled=true;
-          if(b.spe){b.vx+=tcx/td*s*.3*dt; b.vy+=tcy/td*s*.3*dt} // arc around walls
-        }
-      }
-      b.fledNow=fled;
-      if(el>SETTLE){ // everyone keeps gliding on a slowly wandering heading
-        if(b.ang===undefined)b.ang=Math.random()*6.283;
-        b.ang+=(Math.random()-.5)*1.6*dt;
-        var wf=b.spe?70:13;
-        b.vx+=Math.cos(b.ang)*wf*dt; b.vy+=Math.sin(b.ang)*wf*dt;
-        if(b.spe){b.vx+=tcx/td*20*dt; b.vy+=tcy/td*20*dt} // don't sulk in corners
-      }
-      if(b.spe&&el>SETTLE){ // wall aversion, ramps way up while being chased
-        var WM=150, wr=fled?2400:200;
-        b.vx+=wr*Math.max(0,1-(b.x-PAD)/WM)*dt;
-        b.vx-=wr*Math.max(0,1-(W-b.w-PAD-b.x)/WM)*dt;
-        b.vy+=wr*Math.max(0,1-(b.y-topB)/WM)*dt;
-        b.vy-=wr*Math.max(0,1-(H-b.h-PAD-b.y)/WM)*dt;
-      }
-
-      // post-settle: light drag so the glide survives; SPE calms fast after a flee
-      var dg=el>=SETTLE?(b.spe?(fled?.3:1.2):.5):drag;
-      var f=Math.exp(-dg*dt); b.vx*=f; b.vy*=f;
-
-      var sp=Math.hypot(b.vx,b.vy), cap;
-      if(dodging&&mouse.on) cap=b.spe?2200:VFLEE;
-      else if(el<SETTLE) cap=460;
-      else cap=b.spe?110:Math.max(30,sp*.96); // knocked cards glide, then calm
-      if(sp>cap){b.vx*=cap/sp;b.vy*=cap/sp}
-
-      b.x+=b.vx*dt; b.y+=b.vy*dt;
-      var hL=b.x<PAD, hR=b.x>W-b.w-PAD, hT=b.y<topB, hB=b.y>H-b.h-PAD;
-      if(hL)b.x=PAD; if(hR)b.x=W-b.w-PAD; if(hT)b.y=topB; if(hB)b.y=H-b.h-PAD;
-      if(hL||hR||hT||hB){
-        var sp2=Math.hypot(b.vx,b.vy);
-        if(b.spe&&fled&&mouse.on&&(hL||hR)&&(hT||hB)){ // chased into a corner: burst for the middle
-          b.vx=tcx/td*sp2; b.vy=tcy/td*sp2;
-        }else if(b.spe&&fled&&mouse.on){ // chased into a wall: slide along it, away from the cursor
-          if(hL||hR){b.vx=(hL?1:-1)*sp2*.25; b.vy=(b.y+b.h/2>mouse.y?1:-1)*sp2}
-          else{b.vy=(hT?1:-1)*sp2*.25; b.vx=(b.x+b.w/2>mouse.x?1:-1)*sp2}
-        }else{
-          if(hL)b.vx=Math.abs(b.vx)*.85;
-          if(hR)b.vx=-Math.abs(b.vx)*.85;
-          if(hT)b.vy=Math.abs(b.vy)*.85;
-          if(hB)b.vy=-Math.abs(b.vy)*.85;
-        }
-        b.ang=Math.atan2(b.vy,b.vx); // glide heading follows the bounce
-      }
-    });
-
-    // keep cards from stacking
-    for(var i=0;i<boxes.length;i++)for(var j=i+1;j<boxes.length;j++){
-      var a=boxes[i],c=boxes[j],M=10;
-      var px=Math.min(a.x+a.w,c.x+c.w)+M-Math.max(a.x,c.x);
-      var py=Math.min(a.y+a.h,c.y+c.h)+M-Math.max(a.y,c.y);
-      if(px>0&&py>0){
-        // SPE is heavy: it shoulders real cards out of its way, not vice versa
-        var ma=a.spe?(a.fledNow?9:4):1, mc=c.spe?(c.fledNow?9:4):1, ws=ma+mc;
-        if(px<py){var s=(a.x<c.x?-1:1)*px;a.x+=s*mc/ws;c.x-=s*ma/ws;var m=(a.vx+c.vx)/2;a.vx=m+(a.vx-m)*-.3;c.vx=m+(c.vx-m)*-.3}
-        else{var s2=(a.y<c.y?-1:1)*py;a.y+=s2*mc/ws;c.y-=s2*ma/ws;var m2=(a.vy+c.vy)/2;a.vy=m2+(a.vy-m2)*-.3;c.vy=m2+(c.vy-m2)*-.3}
-      }
-    }
-
-    boxes.forEach(function(b){b.el.style.transform='translate3d('+b.x+'px,'+b.y+'px,0)'});
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
-  window.__mb={boxes:boxes,elapsed:function(){return t0===null?0:performance.now()-t0},isLive:function(){return live},diceState:function(){return diceState},jumpState:function(){return jumpState},jumpNow:function(){if(jumpState===0)startJump(performance.now())},jumpInfo:function(){return J&&{M:J.M,crest:J.crest,vx:J.vx,tf:J.tf,ride:J.ride,trail:J.trail.length,W:W,H:H,t0:jumpT0}}};
+  window.__mb={elapsed:function(){return t0===null?0:performance.now()-t0},home:home,layout:L,times:function(){return F&&{t1:F.t1,t2:F.t2,fade1:F.fade1,dice:T_D}},diceState:function(){return diceState},jumpState:function(){return jumpState},jumpNow:function(){if(jumpState===0)startJump(performance.now())},jumpInfo:function(){return J&&{M:J.M,crest:J.crest,vx:J.vx,tf:J.tf,ride:J.ride,trail:J.trail.length,W:W,H:H}}};
 })();
 </script>
 </body>

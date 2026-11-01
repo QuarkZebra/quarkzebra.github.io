@@ -173,6 +173,7 @@ html[data-theme=light] .s1 h1 .hl{background:linear-gradient(94deg,var(--deep),v
 kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--line);border-radius:6px;padding:2px 9px;color:var(--ink)}
 #notes{position:fixed;left:0;right:0;bottom:0;display:none;background:var(--bg2);border-top:1px solid var(--line);padding:18px 28px 24px;font-size:17px;line-height:1.5;color:var(--t2);z-index:15;max-height:34vh;overflow:auto}
 #notes.on{display:block}
+.tries{list-style:none;margin-top:30px;counter-reset:t}.tries li{font-size:34px;line-height:1.3;padding:18px 0 18px 90px;position:relative;border-top:1px solid var(--line)}.tries li::before{counter-increment:t;content:counter(t);position:absolute;left:0;top:16px;font-family:var(--mono);color:var(--accent);font-size:34px}
 </style>
 </head>
 <body>
@@ -186,7 +187,6 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <h1 data-r>Technology-Enabled <span class="hl">Leading</span></h1>
     <p class="lead" data-r>Three key takeaways from <i>A Rich Seam</i> (Fullan &amp; Langworthy, 2014) for school leaders making decisions about technology.</p>
   </div>
-  <div class="foot">Keys: <span class="mono">→</span> next · <span class="mono">N</span> speaker notes · <span class="mono">T</span> light or dark · <span class="mono">F</span> fullscreen</div>
   <div class="notes">0:00. Welcome. The title was assigned. The question we added: when a school buys, bans or approves a technology, what is the leader actually deciding? Outline the session: one prediction, three parts, one commitment. Hand out the one-page summary now, face down.</div>
 </section>
 
@@ -211,25 +211,24 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
   <div class="es">
     <div class="lab" data-r>A &nbsp;Feedback</div><div class="trk" data-r><i style="width:75%"></i><span class="avg"></span></div><div class="val num" data-r>.75</div>
     <div class="lab" data-r>B &nbsp;Peer tutoring</div><div class="trk" data-r><i style="width:55%"></i><span class="avg"></span></div><div class="val num" data-r>.55</div>
-    <div class="lab" data-r>C &nbsp;Technology in the lesson<small>computer-assisted instruction, as a category</small></div><div class="trk" data-r><i class="hatch" style="width:36%"></i><span class="avg"></span></div><div class="val num lo" data-r>&lt;.40</div>
-    <div class="lab" data-r>D &nbsp;Teacher as facilitator<small>inductive teaching, student control over learning</small></div><div class="trk" data-r><i class="lo" style="width:19%"></i><span class="avg"></span></div><div class="val num lo" data-r>.19</div>
-    <div class="lab" data-r>&nbsp;&nbsp;&nbsp;&nbsp;Teacher as activator<small>feedback, reciprocal teaching, metacognition, clarity</small></div><div class="trk" data-r><i style="width:72%"></i><span class="avg"></span></div><div class="val num" data-r>.72</div>
+    <div class="lab" data-r>C &nbsp;Technology in the lesson</div><div class="trk" data-r><i class="hatch" style="width:36%"></i><span class="avg"></span></div><div class="val num lo" data-r>&lt;.40</div>
+    <div class="lab" data-r>D &nbsp;Teacher as facilitator</div><div class="trk" data-r><i class="lo" style="width:19%"></i><span class="avg"></span></div><div class="val num lo" data-r>.19</div>
+    <div class="lab" data-r>&nbsp;&nbsp;&nbsp;&nbsp;Teacher as activator</div><div class="trk" data-r><i style="width:72%"></i><span class="avg"></span></div><div class="val num" data-r>.72</div>
   </div>
-  <div class="legend" data-r><i></i>.40, Hattie's overall average. &nbsp; Hattie 2009, 2012; Higgins, Xiao &amp; Katsipataki 2012 for the EEF. Reported in Fullan &amp; Langworthy 2014, pp. 20, 30, 64.</div>
-  <div class="notes">0:05. The EEF line, read aloud: it is not whether technology is used which makes the difference, but how well it is used to support teaching and learning. Say the caveat once, now: effect sizes are a rough measure. We take "bigger or smaller than average" from them and nothing finer, and the evidence slide at the end says so. The point for leaders: C is a purchasing decision. A, B and D are decisions about teaching, which leaders influence.</div>
+  <div class="legend" data-r><i></i>.40 is Hattie's overall average.</div>
+  <div class="notes">0:05. Sources: Hattie 2009 and 2012; Higgins, Xiao and Katsipataki 2012 for the EEF; reported in Fullan and Langworthy pp. 20, 30, 64. C is computer-assisted instruction as a category; D is inductive teaching and student control over learning; activator covers feedback, reciprocal teaching, metacognition and clarity. The EEF line, read aloud: it is not whether technology is used which makes the difference, but how well it is used to support teaching and learning. Say the caveat once, now: effect sizes are a rough measure. We take "bigger or smaller than average" from them and nothing finer, and the evidence slide at the end says so. The point for leaders: C is a purchasing decision. A, B and D are decisions about teaching, which leaders influence.</div>
 </section>
 
 <!-- 4 · the report and the plan -->
 <section class="slide">
   <div class="eyebrow" data-r>The report, and what we take from it</div>
-  <div class="forces" data-r><span class="on">New pedagogies</span><span class="on">New change leadership</span><span>New system economics</span></div>
   <div class="h sm" data-r>Ninety-nine pages. <span class="hl">Three key takeaways</span> for school leaders.</div>
   <div class="agenda">
-    <div class="card" data-r><div class="k">Part one · 0:10</div><b>Learning goal first, tool second.</b><p>Three levels of technology use, and one question to ask of any tool.</p><div class="t">Sort activity · your school's three</div></div>
-    <div class="card" data-r><div class="k">Part two · 0:30</div><b>Let go, then rein in.</b><p>The change model from the report, and a five-line plan for one live initiative.</p><div class="t">Predict and reveal · plan</div></div>
-    <div class="card" data-r><div class="k">Part three · 0:48</div><b>The change happens between meetings.</b><p>Why PD is only an input, and how Park Manor made learning visible.</p><div class="t">Commitment in pairs · 1:00 trust, three things</div></div>
+    <div class="card" data-r><div class="k">Part one · 0:10</div><b>Learning goal first, tool second.</b><p>Three levels of technology use, and one question to ask of any tool.</p></div>
+    <div class="card" data-r><div class="k">Part two · 0:30</div><b>Let go, then rein in.</b><p>The change model from the report, and a five-line plan for one current initiative.</p></div>
+    <div class="card" data-r><div class="k">Part three · 0:48</div><b>The change happens between meetings.</b><p>Why PD is only an input, and how Park Manor made learning visible.</p></div>
   </div>
-  <div class="notes">0:08. One minute on the report. Fullan and Langworthy, 2014. Interviews and visits in twelve countries, Peel and Park Manor among them. Pearson paid for it, and the authors run the New Pedagogies for Deep Learning partnership it promotes. Say this aloud; it comes back on the evidence slide. The third force, system economics, is a 2013 US cost model and is not covered here.</div>
+  <div class="notes">0:08. One minute on the report. Fullan and Langworthy, 2014; three forces in the report (new pedagogies, new change leadership, new system economics), the first two used here. Interviews and visits in twelve countries, Peel and Park Manor among them. Pearson paid for it, and the authors run the New Pedagogies for Deep Learning partnership it promotes. Say this aloud; it comes back on the evidence slide. The third force, system economics, is a 2013 US cost model and is not covered here.</div>
 </section>
 
 <!-- 5 · PART ONE -->
@@ -241,9 +240,9 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <div class="card" data-r><div class="n">2</div><b>Precise pedagogy</b><p>Which teaching moves get them there?</p></div>
     <div class="card" data-r><div class="n">3</div><b>Then technology</b><p>What enables or speeds up 1 and 2?</p></div>
   </div>
-  <p class="lead" style="margin-top:36px" data-r>Park Manor, a public school in Elmira, Ontario (Grades 6 to 8), followed exactly that order. Reading proficiency went from 72% to 93% in three years. This is one school, so it is an example rather than evidence, but the order is the point.</p>
-  <div class="foot">"Don't start with the technology. Start with pedagogy." Max Drummy, Tasmania. Fullan &amp; Langworthy 2014, pp. 32 to 33.</div>
-  <div class="notes">0:10. Most technology initiatives arrive as step 3 without steps 1 and 2. The leader's first job is to ask for the first two.</div>
+  <p class="lead" style="margin-top:36px" data-r>Park Manor, Elmira, Ontario (Grades 6 to 8), followed this order. Reading proficiency went from 72% to 93% in three years.</p>
+  <div class="foot">Fullan &amp; Langworthy 2014, pp. 32 to 33.</div>
+  <div class="notes">0:10. One school, so an example rather than evidence; the order is the point. Max Drummy, Tasmania: "Don't start with the technology. Start with pedagogy." Most technology initiatives arrive as step 3 without steps 1 and 2. The leader's first job is to ask for the first two.</div>
 </section>
 
 <!-- 6 · sort -->
@@ -255,8 +254,8 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <div class="card" data-r><b>Create</b><p>Students make something that is new to them: an analysis, a model, a product.</p></div>
     <div class="card" data-r><b>Do</b><p>Students use what they made for a real audience, where the result matters beyond the mark.</p></div>
   </div>
-  <p class="lead" style="margin-top:34px" data-r>Nine cards on your table, all from elementary classrooms. Discuss, then place each one. Expect to disagree about a few of them.</p>
-  <div class="notes">0:13. Cards are the last page of the plan. Walk the room; do not settle arguments. The math-facts app, the text-to-speech card and the Google Translate card are the ones groups disagree about, and the disagreement is the useful part. The AI card usually goes to Consume quickly; ask that group why. At 0:18 call time.</div>
+  <p class="lead" style="margin-top:34px" data-r>Nine cards on your table. Discuss, then place each one.</p>
+  <div class="notes">0:13. All nine cards come from elementary classrooms; say that groups will disagree about a few, and that is expected. Cards are the last page of the plan. Walk the room; do not settle arguments. The math-facts app, the text-to-speech card and the Google Translate card are the ones groups disagree about, and the disagreement is the useful part. The AI card usually goes to Consume quickly; ask that group why. At 0:18 call time.</div>
 </section>
 
 <!-- 7 · reveal data -->
@@ -276,8 +275,8 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <div class="lab" data-r>Create multimedia presentations</div><div class="trk" data-r><i class="cr" style="width:15%"></i></div><div class="val num" data-r>6%</div>
     <div class="lab" data-r>Develop simulations or animations</div><div class="trk" data-r><i class="cr" style="width:7.5%"></i></div><div class="val num" data-r>3%</div>
   </div>
-  <div class="foot">Share of teachers asking students to use ICT this way. ITL Research 2011, analysis by SRI; Fullan &amp; Langworthy 2014, Figure 7. Teacher-reported, and fifteen years old. The pattern matters more than the exact numbers.</div>
-  <div class="notes">0:19. Nothing on this chart reaches the Do level. Ask: if we surveyed our school this week, what would change? Usually the tools change (AI, Chromebooks) and the pattern does not. Then ask: who has had an AI tool make a spreadsheet or a letter for you? Which level was that, for you? Consume: the tool decided and you accepted the result. A student who has it write the paragraph is at the same level. The level depends on what the student does, not on the tool.</div>
+  <div class="foot">Share of teachers asking students to use ICT this way. ITL Research 2011; Fullan &amp; Langworthy 2014, Figure 7.</div>
+  <div class="notes">0:19. Teacher-reported and fifteen years old; the pattern matters more than the exact numbers. Nothing on this chart reaches the Do level. Ask: if we surveyed our school this week, what would change? Usually the tools change (AI, Chromebooks) and the pattern does not. Then ask: who has had an AI tool make a spreadsheet or a letter for you? Which level was that, for you? Consume: the tool decided and you accepted the result. A student who has it write the paragraph is at the same level. The level depends on what the student does, not on the tool.</div>
 </section>
 
 <!-- 8 · the stories -->
@@ -285,12 +284,12 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
   <div class="eyebrow" data-r>Where the report's stories sit</div>
   <div class="h sm" data-r>Every example in the report is at the <span class="hl">Do</span> level. The technology in each was ordinary.</div>
   <div class="row">
-    <div class="card" data-r><div class="k">Wellesley, ON · K to 8 school · Gr 7 to 8 math</div><b>Geodesic domes for the Grade 1s</b><p>Students measured every Grade 1 student, found mean, median and mode, priced cardboard from suppliers, built domes to fit. Weekly checks on the math. By the end they had covered more strands than the two textbook classes.</p></div>
-    <div class="card" data-r><div class="k">Michigan · Gr 5 to 6 science</div><b>H2O Heroes</b><p>Ten missions on the hydrosphere. Mission ten: have a positive impact on a community. They raised $2,500 for an ecodome toilet in rural Zambia, getting the quotes themselves over video calls.</p></div>
-    <div class="card" data-r><div class="k">Alabama · Gr 10 English</div><b>Dog River</b><p>A paper on water pollution, then the assignment "do something about it." A group of boys secured $3,400 of donated newspaper advertising and cleaned the river with a TV crew present, two weeks after grades closed.</p></div>
+    <div class="card" data-r><div class="k">Wellesley, ON · K to 8 school · Gr 7 to 8 math</div><b>Geodesic domes for the Grade 1s</b><p>Measured every Grade 1 student, priced the cardboard, built domes to fit. Covered more strands than the two textbook classes.</p></div>
+    <div class="card" data-r><div class="k">Michigan · Gr 5 to 6 science</div><b>H2O Heroes</b><p>Raised $2,500 for an ecodome toilet in rural Zambia. Got the quotes themselves over video calls.</p></div>
+    <div class="card" data-r><div class="k">Alabama · Gr 10 English</div><b>Dog River</b><p>Wrote about water pollution, then cleaned the river, with a TV crew present.</p></div>
   </div>
-  <div class="foot">"It was the simplest forms of technology that are the most profound." Liz Anderson, Grade 6, Park Manor. Fullan &amp; Langworthy 2014, pp. 23 to 25, 33.</div>
-  <div class="notes">0:22. Spreadsheets, email, video calls, a camera. None of these needed a purchase. Each needed a teacher who designed the task and a principal who allowed it six weeks. Save the Wellesley principal for part two: the principal saw the domes and told the story to other teachers and other leaders, and by September the whole K to 8 school had taken it up (p. 50). An acting VP can do the same.</div>
+  <div class="foot">Fullan &amp; Langworthy 2014, pp. 23 to 25.</div>
+  <div class="notes">0:22. Details: the dome class found mean, median and mode and had weekly checks on the math; H2O Heroes was ten missions on the hydrosphere, the tenth being to have a positive impact on a community; the Dog River group secured $3,400 of donated newspaper advertising and worked two weeks after grades closed. Liz Anderson, Grade 6, Park Manor: "It was the simplest forms of technology that are the most profound" (p. 33). Spreadsheets, email, video calls, a camera. None of these needed a purchase. Each needed a teacher who designed the task and a principal who allowed it six weeks. Save the Wellesley principal for part two: the principal saw the domes and told the story to other teachers and other leaders, and by September the whole K to 8 school had taken it up (p. 50). An acting VP can do the same.</div>
 </section>
 
 <!-- 9 · your school's three -->
@@ -318,9 +317,8 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <div class="ar" data-r>→</div>
     <div class="st" data-r><b>Rein in</b><p>Identify what worked, make it visible, spread it. Stop what does not support the direction. Then repeat.</p></div>
   </div>
-  <p class="lead" data-r>"Too directive or too passive: these are the dysfunctional ends." The report says this about teachers. It applies to leaders as well.</p>
   <div class="foot">Fullan &amp; Langworthy 2014, ch. 6, pp. 47 to 52.</div>
-  <div class="notes">0:30. The model in one line: direction, let go, rein in, repeat. Keep the Saltash story until after the prediction.</div>
+  <div class="notes">0:30. The report's line about teachers, which applies to leaders as well: "Too directive or too passive: these are the dysfunctional ends." The model in one line: direction, let go, rein in, repeat. Keep the Saltash story until after the prediction.</div>
 </section>
 
 <!-- 11 · predict -->
@@ -340,10 +338,9 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <div class="card" data-r><div class="k">What the leader required</div><ul><li>One thing. Students use the devices in class.</li><li>A team of student experts to watch for the best uses.</li></ul></div>
     <div class="card" data-r><div class="k">What the leader let go of</div><ul><li>How. Which app, which lesson, which day.</li><li>Whether the teacher herself had to be the expert.</li></ul></div>
   </div>
-  <p class="lead" style="margin-top:30px" data-r>Her students managed the technology, working toward her learning goals. She became one of the school's strongest advocates. "She might not have opened the door without the requirement."</p>
-  <div class="warn" data-r><b>The opposite case.</b> Peel, 2011: a BYOD policy announced to a standing ovation. In some schools, principals and teachers then "feel cut adrift." Letting go without reining in leaves people without support.</div>
+  <div class="warn" data-r><b>The opposite case.</b> Peel, 2011: a BYOD policy announced to a standing ovation. Some schools then "feel cut adrift."</div>
   <div class="foot">Fullan &amp; Langworthy 2014, pp. 47, 49 to 50, 61.</div>
-  <div class="notes">0:36. The leadership decision was the pairing: one requirement plus one way of seeing what happened. Peel is the caution, from the same chapter. If someone asks what the one requirement would be for AI, put it back to the table. Saltash's requirement was that students use the tool, paired with a way to see what happened. It was not a rule about what students could not do.</div>
+  <div class="notes">0:36. Her students managed the technology, working toward her learning goals, and she became one of the school's strongest advocates; Buckley: "she might not have opened the door without the requirement." Letting go without reining in leaves people without support. The leadership decision was the pairing: one requirement plus one way of seeing what happened. Peel is the caution, from the same chapter. If someone asks what the one requirement would be for AI, put it back to the table. Saltash's requirement was that students use the tool, paired with a way to see what happened. It was not a rule about what students could not do.</div>
 </section>
 
 <!-- 13 · rein in looks like -->
@@ -355,8 +352,8 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <div class="card" data-r><div class="k">Capacity</div><ul><li>Make the new practice visible to other adults.</li><li>Co-develop how you will know it worked.</li><li>Use the group to change the group.</li><li>Stop doing things that do not support the direction.</li></ul></div>
   </div>
   <p class="quote" style="margin-top:30px" data-r>"I had to take two steps back so teachers and students could take three steps forward."<span class="who">Andreas Meyer, Principal, WG Davis, Peel</span></p>
-  <div class="foot">Table 5 and the quotes on pp. 51 to 54. Making practice visible without a budget: Wellesley's principal saw the domes and told the story to other teachers and leaders. By September the whole K to 8 school had taken it up (p. 50).</div>
-  <div class="notes">0:39. Read the last line of each column twice; "stop doing" is the one leaders tend to skip. The foot line is the version of "make visible" an acting VP can do: telling one teacher's story at a staff meeting needs no budget.</div>
+  <div class="foot">Fullan &amp; Langworthy 2014, Table 5, pp. 51 to 54.</div>
+  <div class="notes">0:39. Read the last line of each column twice; "stop doing" is the one leaders tend to skip. The version of "make visible" an acting VP can do: Wellesley's principal saw the domes and told the story to other teachers and leaders, and by September the whole K to 8 school had taken it up (p. 50). Telling one teacher's story at a staff meeting needs no budget.</div>
 </section>
 
 <!-- 14 · plan -->
@@ -370,8 +367,8 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
     <tr><td>How we will see what worked, and by when.</td><td></td></tr>
     <tr><td>What we will stop doing to make room.</td><td></td></tr>
   </table>
-  <div class="foot">Choose something current in your school: the questions staff are asking about AI, the Chromebook cart, Google Classroom, an app one division uses daily. If you are not leading an initiative yet, write the one you would propose to your principal.</div>
-  <div class="notes">0:41. Six minutes alone, then two minutes: read your "stop doing" line to a neighbour. If it is blank, the plan adds to staff workload, and that is what staff are tired of. Most of this room acts as VP occasionally rather than leading initiatives; the five lines are the proposal they would bring to their principal.</div>
+  <div class="foot">Choose something current in your school. Not leading an initiative yet? Write the one you would propose to your principal.</div>
+  <div class="notes">0:41. Suggest examples: the questions staff are asking about AI, the Chromebook cart, Google Classroom, an app one division uses daily. Six minutes alone, then two minutes: read your "stop doing" line to a neighbour. If it is blank, the plan adds to staff workload, and that is what staff are tired of. Most of this room acts as VP occasionally rather than leading initiatives; the five lines are the proposal they would bring to their principal.</div>
 </section>
 
 <!-- 15 · PART THREE -->
@@ -379,44 +376,57 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
   <div class="eyebrow" data-r>Part three</div>
   <div class="h" data-r>The change happens <span class="hl">between meetings</span>.</div>
   <p class="quote" data-r>"PD is only an input. It is what happens between PD sessions that counts."<span class="who">Fullan &amp; Langworthy 2014, p. 57</span></p>
-  <p class="lead" style="margin-top:40px" data-r>Forty years of research: continuous, focused collaboration produces learning school-wide. One-off sessions do not, even with full attendance. Appraisal has a weaker effect. The authors' phrase: use the group to change the group.</p>
-  <div class="foot">pp. 53 to 58. This slide applies to this session.</div>
-  <div class="notes">0:48. Say directly that this includes today. Nothing on the handout will matter unless something is scheduled between now and the next time this group meets.</div>
+  <p class="lead" style="margin-top:40px" data-r>Forty years of research: continuous, focused collaboration changes practice school-wide. One-off sessions do not.</p>
+  <div class="foot">Fullan &amp; Langworthy 2014, pp. 53 to 58.</div>
+  <div class="notes">0:48. Even with full attendance, one-off sessions do not change practice; appraisal has a weaker effect still; the authors' phrase is "use the group to change the group." Say directly that this includes today. Nothing on the handout will matter unless something is scheduled between now and the next time this group meets.</div>
 </section>
 
 <!-- 16 · stickies -->
 <section class="slide">
   <div class="eyebrow" data-r>Making learning visible</div>
   <div class="h sm" data-r>Park Manor's most useful technology was a <span class="hl">wall of sticky notes</span>.</div>
-  <p class="lead" data-r>A staff-room wall. One page per student in the school, colour-coded by subject, with notes from every teacher behind it. Any teacher could walk in and see at once which students were struggling, and which colleagues those same students were succeeding with.</p>
+  <p class="lead" data-r>A staff-room wall, one page per student, with every teacher's notes behind it. Any teacher could see at once who was struggling, and with which colleagues they were succeeding.</p>
   <div class="ask" data-r>A test for any tool a leader considers: <span class="hl">does it make learning visible to the adults who need to see it?</span></div>
-  <div class="foot">Fullan &amp; Langworthy 2014, pp. 36, 53. Hellerup, Denmark, does the same thing with e-portfolios.</div>
-  <div class="notes">0:51. Leaders cannot rein in what they cannot see. Ask which of our current systems any teacher could use to see a student's year at a glance.</div>
+  <div class="foot">Fullan &amp; Langworthy 2014, pp. 36, 53.</div>
+  <div class="notes">0:51. Colour-coded by subject. Hellerup, Denmark, does the same thing with e-portfolios. Leaders cannot rein in what they cannot see. Ask which of our current systems any teacher could use to see a student's year at a glance.</div>
 </section>
 
-<!-- 17 · commit -->
+<!-- 17 · try one -->
 <section class="slide">
-  <div class="eyebrow" data-r>Handout · pairs · 7 minutes</div>
-  <div class="h sm" data-r>By <span class="hl">Tuesday, December 1</span>, I will try ______ and show ______ to ______.</div>
-  <p class="lead" data-r>Fill in the three blanks. Swap handouts with a partner and copy their line onto yours. You are each other's "show it to." Put the date in your calendar now.</p>
-  <div class="foot">Three weeks from today's session, Tuesday, November 10.</div>
-  <div class="notes">0:53. Session is Tuesday, November 10; the date on the slide is three weeks out. Walk the room and read a few aloud with permission. Partners, not the principal, are responsible for the follow-up. That is what happens between meetings.</div>
+  <div class="eyebrow" data-r>Before December 1</div>
+  <div class="h sm" data-r>Five things to try. <span class="hl">Pick one.</span></div>
+  <ul class="tries">
+    <li data-r>Rewrite one task with an AI tool so students make something for a real audience.</li>
+    <li data-r>Ask three students to watch for the best use of devices this week and report back.</li>
+    <li data-r>Have students explain their strategy on video. Show one at the next meeting.</li>
+    <li data-r>Tell one teacher's story at the next staff meeting.</li>
+    <li data-r>Paste your five lines into an AI tool and ask which line is weakest.</li>
+  </ul>
+  <div class="notes">0:53. One minute; details are on the handout. 1: paste the learning goal and the current task and ask for a version where students make something for someone real; the adult uses the tool, students do not need to, which matters in elementary where most AI tools require users to be 13 or older. 2: Saltash's student observer team at classroom size; one requirement plus a way of seeing. 3: Dallas Brooks Primary; two minutes, their own words; sharing one at a meeting is "make visible." 4: the Wellesley principal's move; two minutes, what the students made, what changed. 5: AI as a critic for leaders, not a writer; ask what could go wrong and which line is weakest, then decide yourself. Any of the five can be the "I will try" line on the next slide.</div>
 </section>
 
-<!-- 18 · trust -->
+<!-- 18 · commit -->
+<section class="slide">
+  <div class="eyebrow" data-r>Handout · pairs · 6 minutes</div>
+  <div class="h sm" data-r>By <span class="hl">Tuesday, December 1</span>, I will try ______ and show ______ to ______.</div>
+  <p class="lead" data-r>Swap handouts with a partner and copy their line onto yours. Put the date in your calendar now.</p>
+  <div class="notes">0:54. Session is Tuesday, November 10; the date on the slide is three weeks out. Fill in the three blanks; partners are each other's "show it to." Walk the room and read a few aloud with permission. Partners, not the principal, are responsible for the follow-up. That is what happens between meetings.</div>
+</section>
+
+<!-- 19 · trust -->
 <section class="slide">
   <div class="eyebrow" data-r>How much to trust this</div>
   <div class="h sm" data-r>The evidence behind this session, <span class="hl">rated</span>.</div>
   <div class="trust">
-    <div class="lab" data-r>Effect sizes<span class="lv">Hattie, EEF</span></div><div class="pips" data-r><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="why" data-r>Very large syntheses, widely used and widely critiqued. A rough measure: read as "bigger or smaller than average," not to two decimals.</div>
-    <div class="lab" data-r>The ladder data<span class="lv">ITL 2011</span></div><div class="pips" data-r><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="why" data-r>Large survey across seven countries, teacher-reported, fifteen years old. The pattern is reliable; the exact numbers are not.</div>
-    <div class="lab" data-r>The stories<span class="lv">Park Manor, Saltash, Peel, the domes</span></div><div class="pips" data-r><i class="on"></i><i class="on"></i><i></i><i></i></div><div class="why" data-r>Interviews and visits by authors who lead the initiative the report promotes, in a paper Pearson funded. Plausible examples, not evidence of effect.</div>
-    <div class="lab" data-r>"Twice the learning for half the price"</div><div class="pips" data-r><i></i><i></i><i></i><i></i></div><div class="why" data-r>A 2013 US cost model. Not rated; it is not used in this session.</div>
+    <div class="lab" data-r>Effect sizes<span class="lv">Hattie, EEF</span></div><div class="pips" data-r><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="why" data-r>Large syntheses, widely critiqued. Bigger or smaller than average, nothing finer.</div>
+    <div class="lab" data-r>The ladder data<span class="lv">ITL 2011</span></div><div class="pips" data-r><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="why" data-r>Seven countries, teacher-reported, 2011. The pattern, not the numbers.</div>
+    <div class="lab" data-r>The stories<span class="lv">Park Manor, Saltash, Peel, Wellesley</span></div><div class="pips" data-r><i class="on"></i><i class="on"></i><i></i><i></i></div><div class="why" data-r>The authors lead the initiative; Pearson funded the paper. Examples, not evidence of effect.</div>
+    <div class="lab" data-r>"Twice the learning for half the price"</div><div class="pips" data-r><i></i><i></i><i></i><i></i></div><div class="why" data-r>A 2013 US cost model. Not used here.</div>
   </div>
-  <div class="notes">1:00. One minute. This does not undercut the session; it models it. A leader who rates their own evidence is more credible.</div>
+  <div class="notes">1:00. One minute. Effect sizes: very large syntheses, widely used and widely critiqued; read as bigger or smaller than average, never to two decimals. ITL: large survey, fifteen years old. Stories: interviews and visits by the authors who lead the initiative the report promotes, in a Pearson-funded paper. This does not undercut the session; it models it. A leader who rates their own evidence is more credible.</div>
 </section>
 
-<!-- 19 · three things -->
+<!-- 20 · three things -->
 <section class="slide">
   <div class="eyebrow" data-r>Three key takeaways</div>
   <div class="three">
@@ -428,7 +438,7 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
   <div class="notes">1:03. Read all three. Questions until 1:10. If AI comes up, and it will, point at the foot line and at the ladder: an AI tool that writes the answer is Consume; one a student uses to build and test a model is Create. Same question. If the group wants specific AI guidance, point to the question on the handout and to the one-requirement approach.</div>
 </section>
 
-<!-- 20 · references -->
+<!-- 21 · references -->
 <section class="slide">
   <div class="eyebrow" data-r>Sources</div>
   <div class="h sm" data-r>References</div>
@@ -445,7 +455,7 @@ kbd{font-family:var(--mono);background:var(--surface2);border:1px solid var(--li
   <div class="notes">1:10. Everything with a number in this deck is on this list or in the report's own bibliography.</div>
 </section>
 
-<!-- 21 · close -->
+<!-- 22 · close -->
 <section class="slide sX">
   <div class="eyebrow" data-r>Thank you</div>
   <div class="big" data-r>Now go and <span class="hl" style="background:linear-gradient(92deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">stop doing something</span>.</div>
